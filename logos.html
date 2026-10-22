@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>turbo-lean / lean-native — logo gallery</title>
+<title>turbo-lean / lean-native / lean-sys — logo gallery</title>
 <style>
   :root { color-scheme: dark; }
   * { box-sizing: border-box; }
@@ -32,8 +32,8 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>Eight ways to pour a <em>proof</em>.</h1>
-  <p class="lede">Logo studies for turbo-lean and lean-native. Every orb is the real liquid-chrome shader: a 60-harmonic spectral core, an Osher–Rudin shock steepening, then an incompressible streamfunction that advects the metal. The only thing that changes between concepts is the streamfunction. Move the pointer over an orb and it leans toward you.</p>
+  <h1>Twelve ways to pour a <em>proof</em>.</h1>
+  <p class="lede">Sculptural liquid-chrome logo studies for <strong>turbo-lean</strong>, <strong>lean-native</strong>, and <strong>lean-sys</strong>. Each mark replaces the spherical disk with a true non-spherical signed-distance silhouette and negative-space cutouts: the analytical glass/titanium bezel, meniscus curvature, and atmospheric halo wrap every ribbon, blade, and cutout edge while the 60-harmonic Osher–Rudin chrome flows inside.</p>
   <div class="stage">
     <canvas id="canvas-shader" width="1024" height="1024"></canvas>
     <div class="panel">
@@ -41,8 +41,9 @@
       <div class="row" id="proj-row">
         <button data-proj="0" class="active">turbo-lean</button>
         <button data-proj="1">lean-native</button>
+        <button data-proj="2">lean-sys</button>
       </div>
-      <h2>Streamfunction</h2>
+      <h2>Silhouette</h2>
       <div class="opts" id="concept-opts"></div>
       <h2>Light</h2>
       <label class="slider">flow <span id="val-flow">1.10</span></label>
@@ -63,16 +64,22 @@
 <script>
   const CONCEPTS = {
     0: [
-      [1, "Penrose trifold", "Three Gaussian vortices at 120°, sheared by an m=3 harmonic."],
-      [3, "Hydrodynamic fission", "A quadrupole–octopole pair that splits the metal into three soft channels."],
-      [5, "Counter-swirl", "The trifold, inverted and spun the other way."],
-      [7, "Zygote spiral", "An m=3 polynomial twisted by radius, so the spiral has no center point."]
+      [1, "Penrose triskelion", "Three interlocking curved ribbons around a triangular negative-space core."],
+      [2, "Zygote 3-blade turbine", "Three swept hydrofoil blades around a hollow hub, inspired by the Zygote fork daemon."],
+      [3, "Fissioned Reuleaux rotor", "A curved Reuleaux shield sliced by three spiral hydrodynamic channels."],
+      [4, "Harmonic trefoil knot", "Three interwoven eccentric loops with a hollow core."]
     ],
     1: [
-      [2, "Möbius-3", "A pure octopole: three lobes, one continuous sheet of metal."],
-      [4, "Tri-well", "Three shallow compression wells around a bright core."],
-      [6, "Hexa-Reuleaux", "m=3 coupled to m=6, the roundest of the set."],
-      [8, "Counter-rotating lobes", "An inner triplet and an outer triplet, a half-turn apart."]
+      [5, "Borromean forge knot", "Three interlocked eccentric rings with open negative-space lobes and a triangular core."],
+      [6, "Hexa-core shield", "A sculpted hexagonal shield with six vertex scallops and a hexagram cutout."],
+      [7, "Tri-arch tuning fork", "Three forged twin-pronged arches converging around a hollow resonance chamber."],
+      [8, "Machined delta-3 anvil", "Three heavy forged chevrons separated by radial slots around a central void."]
+    ],
+    2: [
+      [9, "ShmRing split torus", "A split concentric ring buffer with cursor gates and a central kernel node."],
+      [10, "3-tier LSM / SST stack", "Three nested isometric chevrons for the crash-atomic WAL and LSM storage tiers."],
+      [11, "Zero-copy IPC twin rings", "Two linked torus rings representing lock-free shared-memory IPC."],
+      [12, "Poll reactor hex-vault", "A six-way slotted hexagonal manifold around a hollow event-loop reactor core."]
     ]
   };
   const state = { concept: 1, palette: 0, flowAmp: 1.10, metalAmp: 1.15, relightAmp: 1.25, iridAmp: 1.30 };
@@ -414,6 +421,185 @@
 
         uniform int uConcept;
 
+        vec2 v2rot(vec2 p, float a) {
+          float c = cos(a), s = sin(a);
+          return vec2(c * p.x - s * p.y, s * p.x + c * p.y);
+        }
+
+        float smin(float a, float b, float k) {
+          float h = max(k - abs(a - b), 0.0) / k;
+          return min(a, b) - h * h * h * k * (1.0 / 6.0);
+        }
+
+        float smax(float a, float b, float k) {
+          return -smin(-a, -b, k);
+        }
+
+        float sdSeg2(vec2 p, vec2 a, vec2 b) {
+          vec2 pa = p - a, ba = b - a;
+          float h = clamp(dot(pa, ba) / max(dot(ba, ba), 1e-8), 0.0, 1.0);
+          return length(pa - ba * h);
+        }
+
+        float sdEquilateralTriangle(vec2 p, float r) {
+          const float k = 1.73205080757;
+          p.x = abs(p.x) - r;
+          p.y = p.y + r / k;
+          if (p.x + k * p.y > 0.0) p = vec2(p.x - k * p.y, -k * p.x - p.y) * 0.5;
+          p.x -= clamp(p.x, -2.0 * r, 0.0);
+          return -length(p) * (p.y < 0.0 ? -1.0 : 1.0);
+        }
+
+        float sdHexagon(vec2 p, float r) {
+          const vec3 k = vec3(-0.866025404, 0.5, 0.577350269);
+          p = abs(p);
+          p -= 2.0 * min(dot(k.xy, p), 0.0) * k.xy;
+          p -= vec2(clamp(p.x, -k.z * r, k.z * r), r);
+          return length(p) * (p.y < 0.0 ? -1.0 : 1.0);
+        }
+
+        float sdBox2(vec2 p, vec2 b) {
+          vec2 d = abs(p) - b;
+          return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0);
+        }
+
+        float sdRoundBox2(vec2 p, vec2 b, float r) {
+          return sdBox2(p, b - vec2(r)) - r;
+        }
+
+        vec2 evalConceptSilhouette(vec2 p) {
+          float r = length(p);
+          float w = 0.26;
+          float d = 1e9;
+          if (uConcept == 1) {
+            w = 0.25;
+            for (int k = 0; k < 3; k++) {
+              vec2 q = v2rot(p, float(k) * 2.0943951);
+              float d1 = sdSeg2(q, vec2(-0.18, -0.27), vec2( 0.48, -0.27)) - 0.165;
+              float d2 = sdSeg2(q, vec2( 0.48, -0.27), vec2( 0.16,  0.30)) - 0.155;
+              float arm = smin(d1, d2, 0.09);
+              d = smin(d, arm, 0.08);
+            }
+            float hole = -(sdEquilateralTriangle(v2rot(p, 3.14159265), 0.26) - 0.04);
+            d = smax(d, hole, 0.065);
+          } else if (uConcept == 2) {
+            w = 0.24;
+            for (int k = 0; k < 3; k++) {
+              vec2 q = v2rot(p, float(k) * 2.0943951 - 0.48 * r);
+              float blade = sdSeg2(q, vec2(0.22, -0.02), vec2(0.74, 0.10)) - 0.145;
+              d = smin(d, blade, 0.10);
+            }
+            float ring = abs(r - 0.27) - 0.105;
+            d = smin(d, ring, 0.09);
+            d = smax(d, -(r - 0.16), 0.05);
+          } else if (uConcept == 3) {
+            w = 0.27;
+            float dTri = sdEquilateralTriangle(p, 0.78) - 0.12;
+            d = smax(dTri, r - 0.86, 0.18);
+            float cuts = r - 0.24;
+            for (int k = 0; k < 3; k++) {
+              vec2 q = v2rot(p, float(k) * 2.0943951 + 0.36 * r);
+              float c = sdSeg2(q, vec2(0.18, 0.0), vec2(0.95, 0.0)) - 0.082;
+              cuts = min(cuts, c);
+            }
+            d = smax(d, -cuts, 0.060);
+          } else if (uConcept == 4) {
+            w = 0.24;
+            for (int k = 0; k < 3; k++) {
+              vec2 q = v2rot(p, float(k) * 2.0943951);
+              float loop = abs(sdRoundBox2(q - vec2(0.0, -0.24), vec2(0.36, 0.44), 0.32)) - 0.125;
+              d = smin(d, loop, 0.065);
+            }
+            d = smax(d, -(r - 0.20), 0.055);
+          } else if (uConcept == 5) {
+            w = 0.24;
+            for (int k = 0; k < 3; k++) {
+              vec2 c = v2rot(vec2(0.0, -0.29), float(k) * 2.0943951);
+              float ring = abs(length(p - c) - 0.45) - 0.125;
+              d = smin(d, ring, 0.065);
+            }
+            float coreVoid = -(sdEquilateralTriangle(p, 0.22) - 0.03);
+            d = smax(d, coreVoid, 0.055);
+          } else if (uConcept == 6) {
+            w = 0.28;
+            float dHex = sdHexagon(v2rot(p, 0.52359878), 0.76) - 0.06;
+            float dInner = -(sdEquilateralTriangle(p, 0.33) - 0.05);
+            float dInner2 = -(sdEquilateralTriangle(v2rot(p, 3.14159265), 0.33) - 0.05);
+            float starVoid = smin(dInner, dInner2, 0.06);
+            d = smax(dHex, starVoid, 0.065);
+            for (int k = 0; k < 6; k++) {
+              vec2 c = v2rot(vec2(0.88, 0.0), float(k) * 1.04719755);
+              d = smax(d, -(length(p - c) - 0.165), 0.055);
+            }
+          } else if (uConcept == 7) {
+            w = 0.25;
+            for (int k = 0; k < 3; k++) {
+              vec2 q = v2rot(p, float(k) * 2.0943951);
+              float archL = sdSeg2(q, vec2(-0.22, -0.14), vec2(-0.20, -0.70)) - 0.132;
+              float archR = sdSeg2(q, vec2( 0.22, -0.14), vec2( 0.20, -0.70)) - 0.132;
+              float base  = sdSeg2(q, vec2(-0.22, -0.18), vec2( 0.22, -0.18)) - 0.135;
+              float fork  = smin(smin(archL, archR, 0.06), base, 0.08);
+              d = smin(d, fork, 0.08);
+            }
+            d = smax(d, -(r - 0.23), 0.055);
+          } else if (uConcept == 8) {
+            w = 0.26;
+            for (int k = 0; k < 3; k++) {
+              vec2 q = v2rot(p, float(k) * 2.0943951);
+              float bar1 = sdSeg2(q, vec2(-0.48, -0.26), vec2(0.0, -0.70)) - 0.145;
+              float bar2 = sdSeg2(q, vec2( 0.48, -0.26), vec2(0.0, -0.70)) - 0.145;
+              float chev = smin(bar1, bar2, 0.10);
+              d = smin(d, chev, 0.10);
+            }
+            float cuts = r - 0.27;
+            for (int k = 0; k < 3; k++) {
+              vec2 q = v2rot(p, float(k) * 2.0943951 + 1.04719755);
+              float slot = sdSeg2(q, vec2(0.24, 0.0), vec2(0.92, 0.0)) - 0.062;
+              cuts = min(cuts, slot);
+            }
+            d = smax(d, -cuts, 0.055);
+          } else if (uConcept == 9) {
+            w = 0.26;
+            float outerRing = abs(r - 0.64) - 0.165;
+            float gap1 = sdBox2(v2rot(p, 0.42), vec2(0.95, 0.072));
+            float splitRing = smax(outerRing, -gap1, 0.055);
+            float innerHub = abs(r - 0.22) - 0.095;
+            float bridge = sdBox2(v2rot(p, -1.15), vec2(0.62, 0.085));
+            float bridgeClip = smax(bridge, r - 0.66, 0.05);
+            bridgeClip = smax(bridgeClip, -(r - 0.20), 0.05);
+            d = smin(smin(splitRing, innerHub, 0.08), bridgeClip, 0.08);
+          } else if (uConcept == 10) {
+            w = 0.25;
+            const float yOff[3] = float[3](-0.38, 0.00, 0.38);
+            for (int k = 0; k < 3; k++) {
+              vec2 q = vec2(p.x, p.y - yOff[k]);
+              float wSpan = (k == 1) ? 0.58 : 0.48;
+              float sL = sdSeg2(q, vec2(-wSpan, -0.06), vec2(0.0, 0.18)) - 0.125;
+              float sR = sdSeg2(q, vec2( wSpan, -0.06), vec2(0.0, 0.18)) - 0.125;
+              float layer = smin(sL, sR, 0.10);
+              d = min(d, layer);
+            }
+          } else if (uConcept == 11) {
+            w = 0.24;
+            vec2 c1 = vec2(-0.24, -0.10);
+            vec2 c2 = vec2( 0.24,  0.10);
+            float r1 = abs(length(p - c1) - 0.44) - 0.130;
+            float r2 = abs(length(p - c2) - 0.44) - 0.130;
+            d = smin(r1, r2, 0.055);
+          } else {
+            w = 0.27;
+            float hex = sdHexagon(p, 0.74) - 0.08;
+            d = smax(hex, -(r - 0.26), 0.06);
+            for (int k = 0; k < 3; k++) {
+              vec2 q = v2rot(p, float(k) * 1.04719755);
+              float slot = sdBox2(q, vec2(0.95, 0.058));
+              slot = smax(slot, -(r - 0.42), 0.04);
+              d = smax(d, -slot, 0.055);
+            }
+          }
+          return vec2(max(1.0 + d / w, 0.0), w);
+        }
+
         float evalStreamPsi(vec2 p, float t, vec2 ptr) {
           float r2 = dot(p, p);
           float r2Norm = r2 / (0.934 * 0.934);
@@ -436,33 +622,22 @@
           float dipole = ptr.x * 0.045 * u + ptr.y * 0.045 * v;
           float swirl = (0.020 * sin(2.0 * w) + 0.014 * cos(5.0 * w)) * (1.0 - 0.30 * r2);
 
+          int style = ((uConcept - 1) & 3) + 1;
           float psi;
-          if (uConcept == 1) {
+          if (style == 1) {
             vec2 c1 = vec2( 0.00, -0.34);
             vec2 c2 = vec2( 0.294, 0.17);
             vec2 c3 = vec2(-0.294, 0.17);
             float vTri = 0.042 * (exp(-dot(p - c1, p - c1) * 2.4) + exp(-dot(p - c2, p - c2) * 2.4) + exp(-dot(p - c3, p - c3) * 2.4));
             psi = 0.068 * octoA - 0.052 * octoB + vTri + 0.042 * (1.0 - 0.30 * r2);
-          } else if (uConcept == 2) {
+          } else if (style == 2) {
             psi = 0.072 * octoA + 0.048 * octoB + 0.036 * quadA + 0.034 * (1.0 - 0.30 * r2);
-          } else if (uConcept == 3) {
-            psi = -0.074 * octoB + 0.048 * octoA + 0.052 * quadB + 0.038 * u - 0.032 * v;
-          } else if (uConcept == 4) {
-            psi = 0.080 * octoB + 0.050 * octoA + 0.034 * quadB;
-          } else if (uConcept == 5) {
-            vec2 c1 = vec2( 0.00,  0.34);
-            vec2 c2 = vec2(-0.294,-0.17);
-            vec2 c3 = vec2( 0.294,-0.17);
-            float vTri = 0.040 * (exp(-dot(p - c1, p - c1) * 2.4) - 0.5 * exp(-dot(p - c2, p - c2) * 2.4) - 0.5 * exp(-dot(p - c3, p - c3) * 2.4));
-            psi = -0.070 * octoB - 0.046 * octoA + 0.044 * quadA + vTri;
-          } else if (uConcept == 6) {
+          } else if (style == 3) {
             float hexA = quadA * quadA - quadB * quadB;
             psi = 0.075 * octoA + 0.048 * octoB + 0.030 * hexA;
-          } else if (uConcept == 7) {
+          } else {
             float cs = cos(1.6 * r2), sn = sin(1.6 * r2);
             psi = 0.064 * (1.0 - 0.30 * r2) + 0.072 * (octoA * cs - octoB * sn) + 0.034 * quadA;
-          } else {
-            psi = -0.078 * octoA + 0.055 * octoB + 0.036 * quadB;
           }
           return env * (psi + dipole + swirl);
         }
@@ -489,9 +664,8 @@
           vec2 p_adv = p - flowAmp * v2;
 
           float rotEnvelope = env * (1.0 - 0.32 * r2);
-          float rotSign = uConcept == 1 ? 0.22 : uConcept == 2 ? -0.20 : uConcept == 3 ? 0.26 :
-                          uConcept == 4 ? -0.24 : uConcept == 5 ? -0.28 : uConcept == 6 ? 0.20 :
-                          uConcept == 7 ? 0.34 : -0.22;
+          int style = ((uConcept - 1) & 3) + 1;
+          float rotSign = style == 1 ? 0.22 : style == 2 ? -0.20 : style == 3 ? 0.26 : -0.24;
           float dTheta = flowAmp * rotEnvelope * (
             rotSign +
             0.06 * sin(2.0 * w) +
@@ -527,18 +701,14 @@
           float octoB = 3.0 * u * u * v - v * v * v;
           float quadA = u * u - v * v;
           float quadB = 2.0 * u * v;
+          int style = ((uConcept - 1) & 3) + 1;
           float h;
-          if (uConcept == 1)      h =  0.076 * octoA + 0.048 * octoB - 0.032 * quadA;
-          else if (uConcept == 2) h =  0.078 * octoB - 0.046 * octoA + 0.038 * quadB;
-          else if (uConcept == 3) h = -0.078 * octoA + 0.054 * octoB + 0.042 * quadA;
-          else if (uConcept == 4) h =  0.085 * octoA - 0.040 * octoB - 0.030 * exp(-r2 / 0.18);
-          else if (uConcept == 5) h =  0.074 * octoA - 0.052 * octoB + 0.036 * quadB;
-          else if (uConcept == 6) h =  0.080 * octoB - 0.042 * octoA + 0.028 * (quadA * quadA - quadB * quadB);
-          else if (uConcept == 7) {
+          if (style == 1)      h =  0.076 * octoA + 0.048 * octoB - 0.032 * quadA;
+          else if (style == 2) h =  0.078 * octoB - 0.046 * octoA + 0.038 * quadB;
+          else if (style == 3) h =  0.080 * octoB - 0.042 * octoA + 0.028 * (quadA * quadA - quadB * quadB);
+          else {
             float cs = cos(1.6 * r2), sn = sin(1.6 * r2);
             h = 0.082 * (octoA * sn + octoB * cs) * exp(-pow((r - 0.42) / 0.32, 2.0)) + 0.036 * octoA;
-          } else {
-            h = 0.090 * octoB * exp(-pow((r - 0.34) / 0.30, 2.0)) - 0.070 * octoA * exp(-pow((r - 0.60) / 0.26, 2.0));
           }
           return h * env;
         }
@@ -602,11 +772,16 @@
             aquaMint   = vec3(-0.11,  0.145, 0.165);
             violetGlow = vec3(-0.04,  0.055, 0.210);
             deepCobalt = vec3(-0.13,  0.020, 0.220);
-          } else {
+          } else if (uPalette == 1) {
             iceCyan    = vec3(-0.08,  0.035, 0.225);
             aquaMint   = vec3( 0.135, 0.065,-0.045);
             violetGlow = vec3( 0.095,-0.020, 0.195);
             deepCobalt = vec3(-0.11, -0.015, 0.230);
+          } else {
+            iceCyan    = vec3(-0.13,  0.155, 0.145);
+            aquaMint   = vec3(-0.06,  0.135, 0.195);
+            violetGlow = vec3(-0.09,  0.075, 0.215);
+            deepCobalt = vec3(-0.14,  0.045, 0.190);
           }
           vec3 pureSpec = vec3(0.14, 0.17, 0.21);
 
@@ -675,11 +850,12 @@
 
         void main() {
           vec2 p = (vUv - uOrbCenter) / uOrbRadius;
-          float r = length(p);
+          vec2 sil = evalConceptSilhouette(p);
+          float r = sil.x;
           float theta = mod(atan(p.y, p.x) + 6.28318530718, 6.28318530718);
           float w = uTime * W24;
 
-          // Strictly pure #000000 black outside the orb's soft circular halo
+          // Strictly pure #000000 black outside the sculpted silhouette halo
           if (r >= 1.118) {
             fragColor = vec4(0.0, 0.0, 0.0, 1.0);
             return;
@@ -690,14 +866,14 @@
           float effIrid    = uIridAmp;
           float effHalo    = uHaloAmp;
 
-          // 1. Evaluate Core (r <= 0.942) from GPU-synthesized & shock-super-resolved harmonic field
+          // 1. Evaluate Core (r <= 0.944) from GPU-synthesized & shock-super-resolved harmonic field
           vec3 coreColor = vec3(0.0);
           if (r <= 0.944) {
             vec2 flowDisp = computeIncompressibleFlow(p, uTime, effFlow, uPointer);
             vec2 p_adv = p + flowDisp;
             float r_adv = length(p_adv);
-            if (r_adv > 0.9355) {
-              p_adv *= (0.9355 / r_adv);
+            if (r_adv > 0.925) {
+              p_adv *= (0.925 / r_adv);
             }
             vec2 uv_core = p_adv * 0.5 + 0.5;
             coreColor = texture(uCoreTex, uv_core).rgb;
@@ -710,14 +886,26 @@
 
             vec3 waveNH = computeWaveNormalAndHeight(p, uTime, uPointer);
 
+            // Smooth 3D liquid-chrome meniscus normal tilt along the non-spherical silhouette boundary
+            const float epsS = 0.0045;
+            float rRx = evalConceptSilhouette(p + vec2(epsS, 0.0)).x;
+            float rLx = evalConceptSilhouette(p - vec2(epsS, 0.0)).x;
+            float rUy = evalConceptSilhouette(p + vec2(0.0, epsS)).x;
+            float rDy = evalConceptSilhouette(p - vec2(0.0, epsS)).x;
+            vec2 silGrad = vec2((rRx - rLx) / (2.0 * epsS), (rUy - rDy) / (2.0 * epsS));
+            float gLen = length(silGrad);
+            if (gLen > 2.2) silGrad *= 2.2 / gLen;
+            float edgeCurve = smoothstep(0.45, 0.92, r);
+            vec2 silBevelN = silGrad * (0.24 * edgeCurve);
+
             // Evaluate ultra-fine advected isotropic metallic micro-crystals
             vec3 microFacet = evalMetallicMicroGrain(p_adv);
             vec2 microNormPerturb = microFacet.xy * (0.0055 * uMetalAmp);
-            vec3 N_live = normalize(N_rest + vec3(waveNH.xy * 0.65 * effRelight + microNormPerturb, 0.0));
+            vec3 N_live = normalize(N_rest + vec3(waveNH.xy * 0.65 * effRelight + silBevelN + microNormPerturb, 0.0));
             vec3 N_rest_faceted = normalize(N_rest + vec3(microNormPerturb * 0.50, 0.0));
 
             // Metallic Chrome Surface Enhancement
-            float r2Norm = min(dot(p, p) / (0.9385 * 0.9385), 1.0);
+            float r2Norm = min((r * r) / (0.9385 * 0.9385), 1.0);
             float metalEnv = max(0.0, 1.0 - r2Norm * r2Norm);
 
             float luma = dot(coreColor, vec3(0.2126, 0.7152, 0.0722));
@@ -725,8 +913,10 @@
 
             // Boundary-preserving monotonic S-curve chrome contrast + cool platinum-steel midtones
             float sCurveLuma = clamp(luma - 0.052 * uMetalAmp * sin(6.2831853 * luma), 0.0, 1.0);
-            vec3 tintLow  = uPalette == 0 ? vec3(0.91, 0.97, 1.05) : vec3(0.93, 0.96, 1.04);
-            vec3 tintHigh = uPalette == 0 ? vec3(0.99, 1.01, 1.03) : vec3(1.01, 1.00, 1.01);
+            vec3 tintLow  = uPalette == 0 ? vec3(0.91, 0.97, 1.05) :
+                            (uPalette == 1 ? vec3(0.93, 0.96, 1.04) : vec3(0.90, 0.99, 1.02));
+            vec3 tintHigh = uPalette == 0 ? vec3(0.99, 1.01, 1.03) :
+                            (uPalette == 1 ? vec3(1.01, 1.00, 1.01) : vec3(0.98, 1.02, 1.01));
             vec3 steelTint = mix(tintLow, tintHigh, smoothstep(0.40, 0.86, sCurveLuma));
             vec3 metallicBase = clamp((sCurveLuma * steelTint) + chromaDiff * (1.0 + 0.12 * uMetalAmp), 0.0, 1.0);
 

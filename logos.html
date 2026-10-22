@@ -32,8 +32,8 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>Twelve ways to pour a <em>proof</em>.</h1>
-  <p class="lede">Sculptural liquid-chrome logo studies for <strong>turbo-lean</strong>, <strong>lean-native</strong>, and <strong>lean-sys</strong>. Each mark replaces the spherical disk with a true non-spherical signed-distance silhouette and negative-space cutouts: the analytical glass/titanium bezel, meniscus curvature, and atmospheric halo wrap every ribbon, blade, and cutout edge while the 60-harmonic Osher–Rudin chrome flows inside.</p>
+  <h1>Twelve ways to machine a <em>proof</em>.</h1>
+  <p class="lede">Real-time 3D raymarched sculptural objects for <strong>turbo-lean</strong>, <strong>lean-native</strong>, and <strong>lean-sys</strong>. Each mark is a solid 3D signed-distance artifact with chamfered CNC radii, cast soft shadows, 4-tap ambient occlusion, bead-blasted anodized micro-grain, and the 60-harmonic Osher–Rudin liquid-chrome sheen reflected across its 3D bevels. Move your cursor across the canvas to tilt and inspect each piece.</p>
   <div class="stage">
     <canvas id="canvas-shader" width="1024" height="1024"></canvas>
     <div class="panel">
@@ -43,10 +43,10 @@
         <button data-proj="1">lean-native</button>
         <button data-proj="2">lean-sys</button>
       </div>
-      <h2>Silhouette</h2>
+      <h2>3D Object</h2>
       <div class="opts" id="concept-opts"></div>
       <h2>Light</h2>
-      <label class="slider">flow <span id="val-flow">1.10</span></label>
+      <label class="slider">sheen <span id="val-flow">1.10</span></label>
       <input id="ctrl-flow" type="range" min="0" max="2.4" step="0.01" value="1.10">
       <label class="slider">metal <span id="val-metal">1.15</span></label>
       <input id="ctrl-metal" type="range" min="0" max="2" step="0.01" value="1.15">
@@ -64,22 +64,22 @@
 <script>
   const CONCEPTS = {
     0: [
-      [1, "Penrose triskelion", "Three interlocking curved ribbons around a triangular negative-space core."],
-      [2, "Zygote 3-blade turbine", "Three swept hydrofoil blades around a hollow hub, inspired by the Zygote fork daemon."],
-      [3, "Fissioned Reuleaux rotor", "A curved Reuleaux shield sliced by three spiral hydrodynamic channels."],
-      [4, "Harmonic trefoil knot", "Three interwoven eccentric loops with a hollow core."]
+      [1, "Machined delta manifold", "Chamfered triangular billet with an inverted core cutout and six milled cooling flutes."],
+      [2, "Zygote 3-scoop rotor", "Heavy anodized disc with three swept hydrodynamic scoops and a central spindle bore."],
+      [3, "Slotted Reuleaux rotor", "Domed Reuleaux shield sliced by three radial expansion slots and a precision hub bore."],
+      [4, "Tri-lobe bearing housing", "Smoothly welded three-lobe mechanical housing with four precision cylindrical bores."]
     ],
     1: [
-      [5, "Borromean forge knot", "Three interlocked eccentric rings with open negative-space lobes and a triangular core."],
-      [6, "Hexa-core shield", "A sculpted hexagonal shield with six vertex scallops and a hexagram cutout."],
-      [7, "Tri-arch tuning fork", "Three forged twin-pronged arches converging around a hollow resonance chamber."],
-      [8, "Machined delta-3 anvil", "Three heavy forged chevrons separated by radial slots around a central void."]
+      [5, "Orthogonal torus link", "Three heavy interlocking torus rings woven along orthogonal axes."],
+      [6, "Hexagram die-shield", "Domed hexagonal billet with a six-pointed star bore and six peripheral scallops."],
+      [7, "Tri-axial node block", "Filleted super-cube bored along all three axes with a suspended spherical core."],
+      [8, "Segmented delta prism", "Three heavy beveled triangular segments separated by uniform radial expansion gaps."]
     ],
     2: [
-      [9, "ShmRing split torus", "A split concentric ring buffer with cursor gates and a central kernel node."],
-      [10, "3-tier LSM / SST stack", "Three nested isometric chevrons for the crash-atomic WAL and LSM storage tiers."],
-      [11, "Zero-copy IPC twin rings", "Two linked torus rings representing lock-free shared-memory IPC."],
-      [12, "Poll reactor hex-vault", "A six-way slotted hexagonal manifold around a hollow event-loop reactor core."]
+      [9, "ShmRing spoked valve", "Concentric torus rings joined by three structural spokes with milled cursor gates."],
+      [10, "3-tier LSM hex pyramid", "Three stepped hexagonal tiers fused with smooth fillets around a deep central bore."],
+      [11, "Zero-copy IPC Hopf link", "Two perpendicular interlocked torus rings representing lock-free shared-memory IPC."],
+      [12, "Slotted reactor manifold", "Six-way radially slotted hexagonal manifold enclosing a suspended event-loop core."]
     ]
   };
   const state = { concept: 1, palette: 0, flowAmp: 1.10, metalAmp: 1.15, relightAmp: 1.25, iridAmp: 1.30 };
@@ -311,7 +311,7 @@
         }
       `;
 
-      // Pass 4: Real-Time 4K Animated Liquid-Chrome & Per-Pixel Analytical Rim/Bezel/Halo Shader
+      // Pass 4: Real-time 3D raymarched machined objects with liquid-chrome reflections
       const fsRender = `#version 300 es
         precision highp float;
 
@@ -319,129 +319,23 @@
         out vec4 fragColor;
 
         uniform sampler2D uCoreTex;
-        uniform sampler2D uNormTex;
         uniform float uTime;
         uniform float uFlowAmp;
         uniform float uMetalAmp;
-        uniform float uRelightAmp;
         uniform float uIridAmp;
-        uniform float uHaloAmp;
         uniform vec2 uPointer;
-        uniform vec2 uOrbCenter;
-        uniform vec2 uOrbRadius;
         uniform int uPalette;
-        uniform vec4 uBezelL[17];
-        uniform vec4 uBezelCR[17];
-        uniform vec4 uBezelCB[17];
-        uniform vec2 uHaloR[13];
-        uniform vec2 uHaloG[13];
-        uniform vec2 uHaloB[13];
-
-        const float W24 = 0.2617993878; // 2.0 * PI / 24.0
-
-        float evalStudioEnv(vec2 p) {
-          float u = p.x;
-          float v = p.y;
-          float u2 = u * u;
-          float v2 = v * v;
-          return 0.5468
-               + 0.2844 * u + 0.0884 * v
-               + 0.0175 * u2 + 0.0027 * u * v + 0.1152 * v2
-               - 0.4393 * u2 * u - 0.2080 * u2 * v - 0.3023 * u * v2 - 0.3974 * v2 * v;
-        }
-
-        float hash12(vec2 p) {
-          vec3 p3 = fract(vec3(p.xyx) * 0.1031);
-          p3 += dot(p3, p3.yzx + 33.33);
-          return fract((p3.x + p3.y) * p3.z);
-        }
-
-        vec2 hash22(vec2 p) {
-          vec3 p3 = fract(vec3(p.xyx) * vec3(0.1031, 0.1030, 0.0973));
-          p3 += dot(p3, p3.yzx + 33.33);
-          return fract((p3.xx + p3.yz) * p3.zy);
-        }
-
-        // Quintic C2-continuous value noise returning vec3(dVal/dx, dVal/dy, val in [-1, 1])
-        vec3 valueNoiseGrad(vec2 x) {
-          vec2 i = floor(x);
-          vec2 f = fract(x);
-          vec2 u = f * f * f * (f * (f * 6.0 - 15.0) + 10.0);
-          vec2 du = 30.0 * f * f * (f * (f - 2.0) + 1.0);
-
-          float a = hash12(i + vec2(0.0, 0.0));
-          float b = hash12(i + vec2(1.0, 0.0));
-          float c = hash12(i + vec2(0.0, 1.0));
-          float d = hash12(i + vec2(1.0, 1.0));
-
-          float k0 = a;
-          float k1 = b - a;
-          float k2 = c - a;
-          float k3 = a - b - c + d;
-
-          float val = (k0 + k1 * u.x + k2 * u.y + k3 * u.x * u.y) * 2.0 - 1.0;
-          vec2 grad = 2.0 * du * vec2(k1 + k3 * u.y, k2 + k3 * u.x);
-          return vec3(grad, val);
-        }
-
-        // High-frequency spatial blue-noise / triangular-PDF metallic crystal grain in [-1, 1]
-        float blueMetallicDither(vec2 fragCoord) {
-          float n0 = hash12(fragCoord);
-          float nX = hash12(fragCoord + vec2(1.0, 0.0));
-          float nY = hash12(fragCoord + vec2(0.0, 1.0));
-          float nD = hash12(fragCoord + vec2(1.0, 1.0));
-          // High-pass blue-noise shaping + triangular PDF
-          float hp = n0 - 0.25 * (nX + nY + nD + hash12(fragCoord - vec2(1.0, 0.0)));
-          float tri = (n0 + nD - 1.0);
-          return clamp(hp * 1.15 + tri * 0.65, -1.0, 1.0);
-        }
-
-        // Ultra-fine advected isotropic crystalline metallic micro-grain (zero coarse orange-peel or concentric rings)
-        // Returns vec3(microNormalX, microNormalY, microAlbedoGrain)
-        vec3 evalMetallicMicroGrain(vec2 p_adv) {
-          const mat2 rot1 = mat2(0.80, -0.60, 0.60, 0.80);
-          const mat2 rot2 = mat2(-0.60, -0.80, 0.80, -0.60);
-          const mat2 rot3 = mat2(0.92,  0.39, -0.39, 0.92);
-
-          // Anti-aliased band-limiting weights based on local screen-space footprint (pxFootprint ~ 0.0036 at 1080p, ~0.0009 at 4K)
-          float pxFootprint = max(length(fwidth(p_adv)), 0.00025);
-          float wOct1 = smoothstep(0.0095, 0.0022, pxFootprint);
-          float wOct2 = smoothstep(0.0062, 0.0014, pxFootprint);
-          float wOct3 = smoothstep(0.0036, 0.0007, pxFootprint);
-
-          // Fine bead-blasted anodized silver micro-crystals across 3 isotropic rotated scales
-          vec3 n1 = valueNoiseGrad(rot1 * p_adv * 290.0 + vec2(17.3, 41.9)) * wOct1;
-          vec3 n2 = valueNoiseGrad(rot2 * p_adv * 540.0 + vec2(83.1, 19.7)) * wOct2;
-          vec3 n3 = valueNoiseGrad(rot3 * p_adv * 1020.0 + vec2(31.4, 67.8)) * wOct3;
-
-          vec2 microNormal = n1.xy * 0.45 + n2.xy * 0.38 + n3.xy * 0.28;
-          float microGrain = n1.z * 0.46 + n2.z * 0.38 + n3.z * 0.28;
-          return vec3(microNormal, microGrain);
-        }
-
         uniform int uConcept;
 
-        vec2 v2rot(vec2 p, float a) {
-          float c = cos(a), s = sin(a);
-          return vec2(c * p.x - s * p.y, s * p.x + c * p.y);
-        }
+        const float PI = 3.14159265359;
 
-        float smin(float a, float b, float k) {
+        float smin3(float a, float b, float k) {
           float h = max(k - abs(a - b), 0.0) / k;
           return min(a, b) - h * h * h * k * (1.0 / 6.0);
         }
+        float smax3(float a, float b, float k) { return -smin3(-a, -b, k); }
 
-        float smax(float a, float b, float k) {
-          return -smin(-a, -b, k);
-        }
-
-        float sdSeg2(vec2 p, vec2 a, vec2 b) {
-          vec2 pa = p - a, ba = b - a;
-          float h = clamp(dot(pa, ba) / max(dot(ba, ba), 1e-8), 0.0, 1.0);
-          return length(pa - ba * h);
-        }
-
-        float sdEquilateralTriangle(vec2 p, float r) {
+        float sdTri2(vec2 p, float r) {
           const float k = 1.73205080757;
           p.x = abs(p.x) - r;
           p.y = p.y + r / k;
@@ -449,603 +343,296 @@
           p.x -= clamp(p.x, -2.0 * r, 0.0);
           return -length(p) * (p.y < 0.0 ? -1.0 : 1.0);
         }
-
-        float sdHexagon(vec2 p, float r) {
+        float sdHex2(vec2 p, float r) {
           const vec3 k = vec3(-0.866025404, 0.5, 0.577350269);
           p = abs(p);
           p -= 2.0 * min(dot(k.xy, p), 0.0) * k.xy;
           p -= vec2(clamp(p.x, -k.z * r, k.z * r), r);
           return length(p) * (p.y < 0.0 ? -1.0 : 1.0);
         }
-
-        float sdBox2(vec2 p, vec2 b) {
-          vec2 d = abs(p) - b;
-          return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0);
+        float sdBox3(vec3 p, vec3 b) {
+          vec3 d = abs(p) - b;
+          return length(max(d, 0.0)) + min(max(d.x, max(d.y, d.z)), 0.0);
+        }
+        float sdCylY3(vec3 p, float r, float h) {
+          vec2 d = vec2(length(p.xz) - r, abs(p.y) - h);
+          return min(max(d.x, d.y), 0.0) + length(max(d, 0.0));
+        }
+        float sdSphere3(vec3 p, float r) { return length(p) - r; }
+        float sdTorus3(vec3 p, float R, float r) {
+          return length(vec2(length(p.xz) - R, p.y)) - r;
+        }
+        float sdCapsule3(vec3 p, vec3 a, vec3 b, float r) {
+          vec3 pa = p - a, ba = b - a;
+          float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
+          return length(pa - ba * h) - r;
+        }
+        float extrude3(float d2, float y, float h) {
+          float dy = abs(y) - h;
+          return min(max(d2, dy), 0.0) + length(max(vec2(d2, dy), 0.0));
+        }
+        vec3 rotY3(vec3 p, float a) {
+          float c = cos(a), s = sin(a);
+          return vec3(c * p.x + s * p.z, p.y, -s * p.x + c * p.z);
+        }
+        vec3 rotX3(vec3 p, float a) {
+          float c = cos(a), s = sin(a);
+          return vec3(p.x, c * p.y - s * p.z, s * p.y + c * p.z);
+        }
+        vec3 rotZ3(vec3 p, float a) {
+          float c = cos(a), s = sin(a);
+          return vec3(c * p.x - s * p.y, s * p.x + c * p.y, p.z);
         }
 
-        float sdRoundBox2(vec2 p, vec2 b, float r) {
-          return sdBox2(p, b - vec2(r)) - r;
-        }
-
-        vec2 evalConceptSilhouette(vec2 p) {
-          float r = length(p);
-          float w = 0.26;
-          float d = 1e9;
-          if (uConcept == 1) {
-            w = 0.25;
+        float sceneSDF(vec3 p) {
+          int m = uConcept;
+          if (m == 1) {
+            float d = extrude3(sdTri2(p.xz, 0.64) - 0.08, p.y, 0.095) - 0.045;
+            float hole = extrude3(sdTri2(vec2(p.x, -p.z), 0.25) - 0.04, p.y, 0.35);
+            d = smax3(d, -hole, 0.035);
             for (int k = 0; k < 3; k++) {
-              vec2 q = v2rot(p, float(k) * 2.0943951);
-              float d1 = sdSeg2(q, vec2(-0.18, -0.27), vec2( 0.48, -0.27)) - 0.165;
-              float d2 = sdSeg2(q, vec2( 0.48, -0.27), vec2( 0.16,  0.30)) - 0.155;
-              float arm = smin(d1, d2, 0.09);
-              d = smin(d, arm, 0.08);
+              vec3 q = rotY3(p, float(k) * 2.0943951);
+              float g1 = sdCapsule3(q, vec3(0.06,  0.115, -0.11), vec3(0.52,  0.115, -0.11), 0.045);
+              float g2 = sdCapsule3(q, vec3(0.06, -0.115, -0.11), vec3(0.52, -0.115, -0.11), 0.045);
+              d = smax3(d, -min(g1, g2), 0.025);
             }
-            float hole = -(sdEquilateralTriangle(v2rot(p, 3.14159265), 0.26) - 0.04);
-            d = smax(d, hole, 0.065);
-          } else if (uConcept == 2) {
-            w = 0.24;
+            return d;
+          }
+          if (m == 2) {
+            float d = sdCylY3(p, 0.66, 0.09) - 0.045;
+            d = smax3(d, -sdCylY3(p, 0.16, 0.35), 0.025);
             for (int k = 0; k < 3; k++) {
-              vec2 q = v2rot(p, float(k) * 2.0943951 - 0.48 * r);
-              float blade = sdSeg2(q, vec2(0.22, -0.02), vec2(0.74, 0.10)) - 0.145;
-              d = smin(d, blade, 0.10);
+              vec3 q = rotY3(p, float(k) * 2.0943951);
+              float scoop = sdCylY3(q - vec3(0.40, 0.0, 0.32), 0.32, 0.35);
+              d = smax3(d, -scoop, 0.03);
             }
-            float ring = abs(r - 0.27) - 0.105;
-            d = smin(d, ring, 0.09);
-            d = smax(d, -(r - 0.16), 0.05);
-          } else if (uConcept == 3) {
-            w = 0.27;
-            float dTri = sdEquilateralTriangle(p, 0.78) - 0.12;
-            d = smax(dTri, r - 0.86, 0.18);
-            float cuts = r - 0.24;
+            return d;
+          }
+          if (m == 3) {
+            float d = extrude3(sdTri2(p.xz, 0.62), p.y, 0.10) - 0.07;
+            d = max(d, sdSphere3(vec3(p.x, p.y * 1.15 - 0.02, p.z), 0.78));
             for (int k = 0; k < 3; k++) {
-              vec2 q = v2rot(p, float(k) * 2.0943951 + 0.36 * r);
-              float c = sdSeg2(q, vec2(0.18, 0.0), vec2(0.95, 0.0)) - 0.082;
-              cuts = min(cuts, c);
+              vec3 q = rotY3(p, float(k) * 2.0943951);
+              float slot = sdBox3(q - vec3(0.22, 0.0, 0.0), vec3(0.55, 0.40, 0.055));
+              d = max(d, -slot);
             }
-            d = smax(d, -cuts, 0.060);
-          } else if (uConcept == 4) {
-            w = 0.24;
+            return max(d, -sdCylY3(p, 0.14, 0.45));
+          }
+          if (m == 4) {
+            float d = 1e9;
             for (int k = 0; k < 3; k++) {
-              vec2 q = v2rot(p, float(k) * 2.0943951);
-              float loop = abs(sdRoundBox2(q - vec2(0.0, -0.24), vec2(0.36, 0.44), 0.32)) - 0.125;
-              d = smin(d, loop, 0.065);
+              float a = float(k) * 2.0943951;
+              vec3 c = vec3(cos(a) * 0.24, 0.0, sin(a) * 0.24);
+              d = smin3(d, sdCylY3(p - c, 0.36, 0.095) - 0.045, 0.06);
             }
-            d = smax(d, -(r - 0.20), 0.055);
-          } else if (uConcept == 5) {
-            w = 0.24;
             for (int k = 0; k < 3; k++) {
-              vec2 c = v2rot(vec2(0.0, -0.29), float(k) * 2.0943951);
-              float ring = abs(length(p - c) - 0.45) - 0.125;
-              d = smin(d, ring, 0.065);
+              float a = float(k) * 2.0943951;
+              vec3 c = vec3(cos(a) * 0.27, 0.0, sin(a) * 0.27);
+              d = smax3(d, -sdCylY3(p - c, 0.14, 0.35), 0.025);
             }
-            float coreVoid = -(sdEquilateralTriangle(p, 0.22) - 0.03);
-            d = smax(d, coreVoid, 0.055);
-          } else if (uConcept == 6) {
-            w = 0.28;
-            float dHex = sdHexagon(v2rot(p, 0.52359878), 0.76) - 0.06;
-            float dInner = -(sdEquilateralTriangle(p, 0.33) - 0.05);
-            float dInner2 = -(sdEquilateralTriangle(v2rot(p, 3.14159265), 0.33) - 0.05);
-            float starVoid = smin(dInner, dInner2, 0.06);
-            d = smax(dHex, starVoid, 0.065);
+            return smax3(d, -sdCylY3(p, 0.12, 0.35), 0.025);
+          }
+          if (m == 5) {
+            float a = sdTorus3(p, 0.50, 0.105);
+            float b = sdTorus3(rotX3(p - vec3(0.50, 0.0, 0.0), PI * 0.5), 0.50, 0.105);
+            float c = sdTorus3(rotZ3(p - vec3(0.0, 0.0, 0.50), PI * 0.5), 0.50, 0.105);
+            return min(a, min(b, c));
+          }
+          if (m == 6) {
+            float d = extrude3(sdHex2(p.xz, 0.62), p.y, 0.07) - 0.045;
+            d = max(d, sdSphere3(vec3(p.x, (p.y - 0.02) * 1.35, p.z), 0.74));
+            float hole = extrude3(min(sdTri2(p.xz, 0.30), sdTri2(vec2(p.x, -p.z), 0.30)), p.y, 0.40);
+            d = max(d, -(hole - 0.02));
             for (int k = 0; k < 6; k++) {
-              vec2 c = v2rot(vec2(0.88, 0.0), float(k) * 1.04719755);
-              d = smax(d, -(length(p - c) - 0.165), 0.055);
+              float a = float(k) * 1.04719755;
+              d = max(d, -sdSphere3(p - vec3(cos(a) * 0.70, 0.0, sin(a) * 0.70), 0.15));
             }
-          } else if (uConcept == 7) {
-            w = 0.25;
+            return d;
+          }
+          if (m == 7) {
+            float d = sdBox3(p, vec3(0.46)) - 0.08;
+            d = smax3(d, sdSphere3(p, 0.68), 0.04);
+            float c1 = sdCylY3(p, 0.25, 0.80);
+            float c2 = sdCylY3(rotX3(p, PI * 0.5), 0.25, 0.80);
+            float c3 = sdCylY3(rotZ3(p, PI * 0.5), 0.25, 0.80);
+            d = smax3(d, -min(c1, min(c2, c3)), 0.045);
+            return min(d, sdSphere3(p, 0.17));
+          }
+          if (m == 8) {
+            float d = extrude3(sdTri2(p.xz, 0.66) - 0.06, p.y, 0.11) - 0.05;
+            d = smax3(d, -extrude3(sdTri2(p.xz, 0.28), p.y, 0.40), 0.03);
             for (int k = 0; k < 3; k++) {
-              vec2 q = v2rot(p, float(k) * 2.0943951);
-              float archL = sdSeg2(q, vec2(-0.22, -0.14), vec2(-0.20, -0.70)) - 0.132;
-              float archR = sdSeg2(q, vec2( 0.22, -0.14), vec2( 0.20, -0.70)) - 0.132;
-              float base  = sdSeg2(q, vec2(-0.22, -0.18), vec2( 0.22, -0.18)) - 0.135;
-              float fork  = smin(smin(archL, archR, 0.06), base, 0.08);
-              d = smin(d, fork, 0.08);
+              vec3 q = rotY3(p, float(k) * 2.0943951);
+              float notch = sdBox3(q - vec3(0.0, 0.0, -0.55), vec3(0.075, 0.35, 0.35));
+              d = smax3(d, -notch, 0.025);
             }
-            d = smax(d, -(r - 0.23), 0.055);
-          } else if (uConcept == 8) {
-            w = 0.26;
+            return d;
+          }
+          if (m == 9) {
+            float d = min(sdTorus3(p, 0.60, 0.115), sdTorus3(p, 0.25, 0.085));
             for (int k = 0; k < 3; k++) {
-              vec2 q = v2rot(p, float(k) * 2.0943951);
-              float bar1 = sdSeg2(q, vec2(-0.48, -0.26), vec2(0.0, -0.70)) - 0.145;
-              float bar2 = sdSeg2(q, vec2( 0.48, -0.26), vec2(0.0, -0.70)) - 0.145;
-              float chev = smin(bar1, bar2, 0.10);
-              d = smin(d, chev, 0.10);
+              vec3 q = rotY3(p, float(k) * 2.0943951);
+              float spoke = sdBox3(q - vec3(0.42, 0.0, 0.0), vec3(0.18, 0.055, 0.065)) - 0.015;
+              d = smin3(d, spoke, 0.035);
+              vec3 g = rotY3(p, float(k) * 2.0943951 + 1.04719755);
+              float gate = sdBox3(g - vec3(0.60, 0.09, 0.0), vec3(0.20, 0.08, 0.055));
+              d = smax3(d, -gate, 0.015);
             }
-            float cuts = r - 0.27;
-            for (int k = 0; k < 3; k++) {
-              vec2 q = v2rot(p, float(k) * 2.0943951 + 1.04719755);
-              float slot = sdSeg2(q, vec2(0.24, 0.0), vec2(0.92, 0.0)) - 0.062;
-              cuts = min(cuts, slot);
-            }
-            d = smax(d, -cuts, 0.055);
-          } else if (uConcept == 9) {
-            w = 0.26;
-            float outerRing = abs(r - 0.64) - 0.165;
-            float gap1 = sdBox2(v2rot(p, 0.42), vec2(0.95, 0.072));
-            float splitRing = smax(outerRing, -gap1, 0.055);
-            float innerHub = abs(r - 0.22) - 0.095;
-            float bridge = sdBox2(v2rot(p, -1.15), vec2(0.62, 0.085));
-            float bridgeClip = smax(bridge, r - 0.66, 0.05);
-            bridgeClip = smax(bridgeClip, -(r - 0.20), 0.05);
-            d = smin(smin(splitRing, innerHub, 0.08), bridgeClip, 0.08);
-          } else if (uConcept == 10) {
-            w = 0.25;
-            const float yOff[3] = float[3](-0.38, 0.00, 0.38);
-            for (int k = 0; k < 3; k++) {
-              vec2 q = vec2(p.x, p.y - yOff[k]);
-              float wSpan = (k == 1) ? 0.58 : 0.48;
-              float sL = sdSeg2(q, vec2(-wSpan, -0.06), vec2(0.0, 0.18)) - 0.125;
-              float sR = sdSeg2(q, vec2( wSpan, -0.06), vec2(0.0, 0.18)) - 0.125;
-              float layer = smin(sL, sR, 0.10);
-              d = min(d, layer);
-            }
-          } else if (uConcept == 11) {
-            w = 0.24;
-            vec2 c1 = vec2(-0.24, -0.10);
-            vec2 c2 = vec2( 0.24,  0.10);
-            float r1 = abs(length(p - c1) - 0.44) - 0.130;
-            float r2 = abs(length(p - c2) - 0.44) - 0.130;
-            d = smin(r1, r2, 0.055);
-          } else {
-            w = 0.27;
-            float hex = sdHexagon(p, 0.74) - 0.08;
-            d = smax(hex, -(r - 0.26), 0.06);
-            for (int k = 0; k < 3; k++) {
-              vec2 q = v2rot(p, float(k) * 1.04719755);
-              float slot = sdBox2(q, vec2(0.95, 0.058));
-              slot = smax(slot, -(r - 0.42), 0.04);
-              d = smax(d, -slot, 0.055);
-            }
+            return d;
           }
-          return vec2(max(1.0 + d / w, 0.0), w);
-        }
-
-        float evalStreamPsi(vec2 p, float t, vec2 ptr) {
-          float r2 = dot(p, p);
-          float r2Norm = r2 / (0.934 * 0.934);
-          if (r2Norm >= 1.0) return 0.0;
-
-          float oneMinusR4 = 1.0 - r2Norm * r2Norm;
-          float env = oneMinusR4 * oneMinusR4 * oneMinusR4;
-
-          float u = p.x;
-          float v = p.y;
-          float r = sqrt(r2);
-          float w = t * W24;
-
-          float octoA = u * u * u - 3.0 * u * v * v;
-          float octoB = 3.0 * u * u * v - v * v * v;
-          float quadA = u * u - v * v;
-          float quadB = 2.0 * u * v;
-
-          // Pointer-driven dipole keeps the fluid reactive to the cursor
-          float dipole = ptr.x * 0.045 * u + ptr.y * 0.045 * v;
-          float swirl = (0.020 * sin(2.0 * w) + 0.014 * cos(5.0 * w)) * (1.0 - 0.30 * r2);
-
-          int style = ((uConcept - 1) & 3) + 1;
-          float psi;
-          if (style == 1) {
-            vec2 c1 = vec2( 0.00, -0.34);
-            vec2 c2 = vec2( 0.294, 0.17);
-            vec2 c3 = vec2(-0.294, 0.17);
-            float vTri = 0.042 * (exp(-dot(p - c1, p - c1) * 2.4) + exp(-dot(p - c2, p - c2) * 2.4) + exp(-dot(p - c3, p - c3) * 2.4));
-            psi = 0.068 * octoA - 0.052 * octoB + vTri + 0.042 * (1.0 - 0.30 * r2);
-          } else if (style == 2) {
-            psi = 0.072 * octoA + 0.048 * octoB + 0.036 * quadA + 0.034 * (1.0 - 0.30 * r2);
-          } else if (style == 3) {
-            float hexA = quadA * quadA - quadB * quadB;
-            psi = 0.075 * octoA + 0.048 * octoB + 0.030 * hexA;
-          } else {
-            float cs = cos(1.6 * r2), sn = sin(1.6 * r2);
-            psi = 0.064 * (1.0 - 0.30 * r2) + 0.072 * (octoA * cs - octoB * sn) + 0.034 * quadA;
+          if (m == 10) {
+            float t0 = extrude3(sdHex2(p.xz, 0.62) - 0.04, p.y + 0.14, 0.055) - 0.03;
+            float t1 = extrude3(sdHex2(p.xz, 0.46) - 0.04, p.y,        0.055) - 0.03;
+            float t2 = extrude3(sdHex2(p.xz, 0.30) - 0.04, p.y - 0.14, 0.055) - 0.03;
+            float d = smin3(t0, smin3(t1, t2, 0.035), 0.035);
+            return smax3(d, -sdCylY3(p, 0.15, 0.45), 0.03);
           }
-          return env * (psi + dipole + swirl);
-        }
-
-        vec2 evalVelocity(vec2 p, float t, vec2 ptr) {
-          const float eps = 0.0025;
-          float dpsi_dx = (evalStreamPsi(p + vec2(eps, 0.0), t, ptr) - evalStreamPsi(p - vec2(eps, 0.0), t, ptr)) / (2.0 * eps);
-          float dpsi_dy = (evalStreamPsi(p + vec2(0.0, eps), t, ptr) - evalStreamPsi(p - vec2(0.0, eps), t, ptr)) / (2.0 * eps);
-          return vec2(dpsi_dy, -dpsi_dx);
-        }
-
-        vec2 computeIncompressibleFlow(vec2 p, float t, float flowAmp, vec2 ptr) {
-          float r2 = dot(p, p);
-          float r2Norm = r2 / (0.934 * 0.934);
-          if (r2Norm >= 1.0 || flowAmp <= 0.0001) return vec2(0.0);
-
-          float oneMinusR4 = 1.0 - r2Norm * r2Norm;
-          float env = oneMinusR4 * oneMinusR4;
-          float w = t * W24;
-
-          vec2 v1 = evalVelocity(p, t, ptr);
-          vec2 p_mid = p - 0.5 * flowAmp * v1;
-          vec2 v2 = evalVelocity(p_mid, t, ptr);
-          vec2 p_adv = p - flowAmp * v2;
-
-          float rotEnvelope = env * (1.0 - 0.32 * r2);
-          int style = ((uConcept - 1) & 3) + 1;
-          float rotSign = style == 1 ? 0.22 : style == 2 ? -0.20 : style == 3 ? 0.26 : -0.24;
-          float dTheta = flowAmp * rotEnvelope * (
-            rotSign +
-            0.06 * sin(2.0 * w) +
-            ptr.x * 0.14
-          );
-          float cs = cos(dTheta);
-          float sn = sin(dTheta);
-          p_adv = vec2(cs * p_adv.x - sn * p_adv.y, sn * p_adv.x + cs * p_adv.y);
-
-          float breath = flowAmp * env * (1.0 - r2Norm) * (
-            0.058 * sin(3.0 * w + 0.4) +
-            0.036 * cos(7.0 * w - 0.3)
-          );
-          float axAngle = 1.5 * w;
-          vec2 ax1 = vec2(cos(axAngle), sin(axAngle));
-          vec2 ax2 = vec2(-ax1.y, ax1.x);
-          float p_ax1 = dot(p_adv, ax1);
-          float p_ax2 = dot(p_adv, ax2);
-          float quadScale = flowAmp * env * (0.046 * cos(4.0 * w) + 0.028 * sin(9.0 * w));
-
-          p_adv += p_adv * breath + (ax1 * p_ax1 - ax2 * p_ax2) * quadScale;
-          return p_adv - p;
-        }
-
-        float evalConceptWaveHeight(vec2 p) {
-          float r2 = dot(p, p);
-          float r2Norm = r2 / (0.934 * 0.934);
-          if (r2Norm >= 1.0) return 0.0;
-          float oneMinusR4 = 1.0 - r2Norm * r2Norm;
-          float env = oneMinusR4 * oneMinusR4;
-          float u = p.x, v = p.y, r = sqrt(r2);
-          float octoA = u * u * u - 3.0 * u * v * v;
-          float octoB = 3.0 * u * u * v - v * v * v;
-          float quadA = u * u - v * v;
-          float quadB = 2.0 * u * v;
-          int style = ((uConcept - 1) & 3) + 1;
-          float h;
-          if (style == 1)      h =  0.076 * octoA + 0.048 * octoB - 0.032 * quadA;
-          else if (style == 2) h =  0.078 * octoB - 0.046 * octoA + 0.038 * quadB;
-          else if (style == 3) h =  0.080 * octoB - 0.042 * octoA + 0.028 * (quadA * quadA - quadB * quadB);
-          else {
-            float cs = cos(1.6 * r2), sn = sin(1.6 * r2);
-            h = 0.082 * (octoA * sn + octoB * cs) * exp(-pow((r - 0.42) / 0.32, 2.0)) + 0.036 * octoA;
+          if (m == 11) {
+            float a = sdTorus3(p - vec3(0.02, 0.0, 0.0), 0.46, 0.105);
+            float b = sdTorus3(rotX3(p - vec3(0.46, 0.0, 0.0), PI * 0.5), 0.46, 0.105);
+            return min(a, b);
           }
-          return h * env;
-        }
-
-        vec3 computeWaveNormalAndHeight(vec2 p, float t, vec2 ptr) {
-          float r2 = dot(p, p);
-          float r2Norm = r2 / (0.934 * 0.934);
-          if (r2Norm >= 1.0) return vec3(0.0);
-          float oneMinusR4 = 1.0 - r2Norm * r2Norm;
-          float env = oneMinusR4 * oneMinusR4;
-
-          const float eps = 0.0040;
-          float hC = evalConceptWaveHeight(p);
-          float hR = evalConceptWaveHeight(p + vec2(eps, 0.0));
-          float hL = evalConceptWaveHeight(p - vec2(eps, 0.0));
-          float hU = evalConceptWaveHeight(p + vec2(0.0, eps));
-          float hD = evalConceptWaveHeight(p - vec2(0.0, eps));
-
-          float w = t * W24;
-          vec2 k1 = 2.15 * vec2(cos(w + 0.2), sin(w + 0.2));
-          float ripple = 0.020 * sin(dot(p, k1) - 7.0 * w);
-
-          return vec3(-(hR - hL) / (2.0 * eps) - ripple * k1.x * env,
-                      -(hU - hD) / (2.0 * eps) - ripple * k1.y * env,
-                       hC + ripple * env);
-        }
-
-        float evaluateChromeSpecular(vec3 N, vec3 L1, vec3 L2, vec3 L3, float metalBoost) {
-          vec3 V = vec3(0.0, 0.0, 1.0);
-          vec3 H1 = normalize(L1 + V);
-          vec3 H2 = normalize(L2 + V);
-          vec3 H3 = normalize(L3 + V);
-
-          float ndh1 = max(0.0, dot(N, H1));
-          float ndh2 = max(0.0, dot(N, H2));
-          float ndh3 = max(0.0, dot(N, H3));
-
-          float spec1 = 0.30 * pow(ndh1, 5.0) + 0.26 * pow(ndh1, 18.0) + 0.22 * metalBoost * pow(ndh1, 52.0);
-          float spec2 = 0.26 * pow(ndh2, 7.0) + 0.22 * pow(ndh2, 22.0) + 0.20 * metalBoost * pow(ndh2, 60.0);
-          float spec3 = 0.22 * pow(ndh3, 5.0) + 0.18 * pow(ndh3, 16.0) + 0.16 * metalBoost * pow(ndh3, 48.0);
-          return spec1 + spec2 + spec3;
-        }
-
-        float softMetallicLightCurve(float rawDelta) {
-          if (rawDelta >= 0.0) {
-            return 0.24 * tanh(rawDelta / 0.24);
-          } else {
-            return 0.070 * tanh(rawDelta / 0.070);
+          float d = extrude3(sdHex2(p.xz, 0.58), p.y, 0.08) - 0.04;
+          d = max(d, -sdCylY3(p, 0.22, 0.40));
+          for (int k = 0; k < 6; k++) {
+            vec3 q = rotY3(p, float(k) * 1.04719755);
+            float slot = sdBox3(q, vec3(0.70, 0.28, 0.045));
+            slot = max(slot, -(length(q.xz) - 0.30));
+            d = max(d, -slot);
           }
+          return min(d, sdSphere3(p, 0.12));
         }
 
-        vec3 evaluateThinFilmDispersion(vec3 N_live, vec3 N_rest, vec2 p, float dispMask, float t) {
-          float w = t * W24;
-          vec2 rotDir = vec2(cos(2.0 * w), sin(2.0 * w));
-          float angleShift = clamp(dot(N_live.xy - N_rest.xy, vec2(0.75, -0.66)), -0.35, 0.35);
-          float filmPhase = 2.5 * dot(p, rotDir) - 7.0 * w + 4.4 * dot(N_live.xy, vec2(0.6, -0.8));
-
-          vec3 iceCyan, deepCobalt, violetGlow, aquaMint;
-          if (uPalette == 0) {
-            iceCyan    = vec3(-0.14,  0.115, 0.235);
-            aquaMint   = vec3(-0.11,  0.145, 0.165);
-            violetGlow = vec3(-0.04,  0.055, 0.210);
-            deepCobalt = vec3(-0.13,  0.020, 0.220);
-          } else if (uPalette == 1) {
-            iceCyan    = vec3(-0.08,  0.035, 0.225);
-            aquaMint   = vec3( 0.135, 0.065,-0.045);
-            violetGlow = vec3( 0.095,-0.020, 0.195);
-            deepCobalt = vec3(-0.11, -0.015, 0.230);
-          } else {
-            iceCyan    = vec3(-0.13,  0.155, 0.145);
-            aquaMint   = vec3(-0.06,  0.135, 0.195);
-            violetGlow = vec3(-0.09,  0.075, 0.215);
-            deepCobalt = vec3(-0.14,  0.045, 0.190);
-          }
-          vec3 pureSpec = vec3(0.14, 0.17, 0.21);
-
-          float paletteMix = 0.5 + 0.5 * sin(3.0 * w + p.x * 1.4);
-          vec3 primaryBand   = mix(iceCyan, aquaMint, paletteMix);
-          vec3 secondaryBand = mix(violetGlow, deepCobalt, 0.5 + 0.5 * cos(5.0 * w - p.y * 1.4));
-
-          float osc1 = sin(filmPhase);
-          float osc2 = cos(filmPhase * 1.15 + 4.0 * w + 0.8);
-          float ridgeGlint = pow(0.5 + 0.5 * sin(filmPhase - 0.5), 3.0) - 0.25;
-
-          float r2Norm = dot(p, p) / (0.934 * 0.934);
-          float env = max(0.0, 1.0 - r2Norm * r2Norm);
-          float strength = dispMask * env;
-
-          return (primaryBand * osc1 * 0.65 + secondaryBand * osc2 * 0.45 + pureSpec * ridgeGlint * 0.75 + primaryBand * angleShift * 1.05) * strength;
+        vec3 sceneNormal(vec3 p) {
+          const float e = 0.0016;
+          float dx = sceneSDF(p + vec3(e, 0.0, 0.0)) - sceneSDF(p - vec3(e, 0.0, 0.0));
+          float dy = sceneSDF(p + vec3(0.0, e, 0.0)) - sceneSDF(p - vec3(0.0, e, 0.0));
+          float dz = sceneSDF(p + vec3(0.0, 0.0, e)) - sceneSDF(p - vec3(0.0, 0.0, e));
+          return normalize(vec3(dx, dy, dz));
         }
 
-        // Per-pixel analytical evaluation of the outer glass/chrome shell bezel (0.9385 <= r <= 0.9985)
-        vec3 evalAnalyticalBezel(float r, float theta) {
-          float tau = clamp((r - 0.9385) / (0.9985 - 0.9385), 0.0, 1.0);
-          vec4 phi = vec4(
-            1.0,
-            tau,
-            tau * tau,
-            exp(-0.5 * pow((tau - 0.92) / 0.065, 2.0))
-          );
-          vec4 sumL  = uBezelL[0];
-          vec4 sumCR = uBezelCR[0];
-          vec4 sumCB = uBezelCB[0];
-          for (int m = 1; m <= 8; ++m) {
-            float ang = float(m) * theta;
-            float cs = cos(ang);
-            float sn = sin(ang);
-            sumL  += uBezelL[2 * m - 1]  * cs + uBezelL[2 * m]  * sn;
-            sumCR += uBezelCR[2 * m - 1] * cs + uBezelCR[2 * m] * sn;
-            sumCB += uBezelCB[2 * m - 1] * cs + uBezelCB[2 * m] * sn;
+        float sceneAO(vec3 p, vec3 n) {
+          float occ = 0.0, sc = 1.0;
+          for (int i = 1; i <= 4; i++) {
+            float h = 0.035 * float(i);
+            occ += (h - sceneSDF(p + n * h)) * sc;
+            sc *= 0.55;
           }
-          float L  = dot(sumL,  phi);
-          float CR = dot(sumCR, phi);
-          float CB = dot(sumCB, phi);
-          float CG = -(0.2126 * CR + 0.0722 * CB) / 0.7152;
-          // Razor-sharp 4K specular chrome rim wire at r = 0.9960
-          float outerWire = 0.046 * exp(-0.5 * pow((r - 0.9960) / 0.0018, 2.0));
-          return clamp(vec3(L + CR + outerWire, L + CG + outerWire, L + CB + outerWire * 1.08), 0.0, 1.0);
+          return clamp(1.0 - 1.35 * occ, 0.0, 1.0);
         }
 
-        // Per-pixel analytical evaluation of the outer atmospheric halo (r > 0.9985)
-        vec3 evalAnalyticalHalo(float r, float theta) {
-          float ds = max(r - 0.9985, 0.0);
-          vec2 phi = vec2(exp(-16.0 * ds), exp(-42.0 * ds));
-          vec2 sumR = uHaloR[0];
-          vec2 sumG = uHaloG[0];
-          vec2 sumB = uHaloB[0];
-          for (int m = 1; m <= 6; ++m) {
-            float ang = float(m) * theta;
-            float cs = cos(ang);
-            float sn = sin(ang);
-            sumR += uHaloR[2 * m - 1] * cs + uHaloR[2 * m] * sn;
-            sumG += uHaloG[2 * m - 1] * cs + uHaloG[2 * m] * sn;
-            sumB += uHaloB[2 * m - 1] * cs + uHaloB[2 * m] * sn;
+        float sceneShadow(vec3 p, vec3 ld) {
+          float t = 0.02, res = 1.0;
+          for (int i = 0; i < 14; i++) {
+            float h = sceneSDF(p + ld * t);
+            if (h < 0.0015) return 0.28;
+            res = min(res, 14.0 * h / t);
+            t += clamp(h, 0.015, 0.12);
+            if (t > 2.2) break;
           }
-          float taper = smoothstep(1.116, 1.068, r);
-          return clamp(vec3(dot(sumR, phi), dot(sumG, phi), dot(sumB, phi)) * taper, 0.0, 1.0);
+          return clamp(res, 0.28, 1.0);
+        }
+
+        float hash3f(vec3 p) {
+          p = fract(p * vec3(0.1031, 0.1030, 0.0973));
+          float d = p.x * (p.y + 33.33) + p.y * (p.z + 33.33) + p.z * (p.x + 33.33);
+          p += d;
+          return fract((p.x + p.y) * p.z);
+        }
+        float noise3f(vec3 x) {
+          vec3 i = floor(x), f = fract(x);
+          vec3 u = f * f * (3.0 - 2.0 * f);
+          float n000 = hash3f(i), n100 = hash3f(i + vec3(1,0,0));
+          float n010 = hash3f(i + vec3(0,1,0)), n110 = hash3f(i + vec3(1,1,0));
+          float n001 = hash3f(i + vec3(0,0,1)), n101 = hash3f(i + vec3(1,0,1));
+          float n011 = hash3f(i + vec3(0,1,1)), n111 = hash3f(i + vec3(1,1,1));
+          return mix(mix(mix(n000, n100, u.x), mix(n010, n110, u.x), u.y),
+                     mix(mix(n001, n101, u.x), mix(n011, n111, u.x), u.y), u.z);
+        }
+
+        vec3 envColor(vec3 rd) {
+          float up = clamp(rd.y * 0.5 + 0.5, 0.0, 1.0);
+          vec3 floorC = vec3(0.015, 0.016, 0.02);
+          vec3 zenith, horiz;
+          if (uPalette == 0)      { zenith = vec3(0.55, 0.78, 0.92); horiz = vec3(0.16, 0.28, 0.38); }
+          else if (uPalette == 1) { zenith = vec3(0.62, 0.58, 0.82); horiz = vec3(0.28, 0.20, 0.16); }
+          else                     { zenith = vec3(0.45, 0.78, 0.70); horiz = vec3(0.10, 0.22, 0.24); }
+          vec3 sky = mix(horiz, zenith, pow(up, 0.65));
+          sky = mix(floorC, sky, smoothstep(-0.25, 0.15, rd.y));
+          float win  = exp(-pow(length(rd - vec3( 0.45, 0.55, 0.65)) * 2.4, 2.0));
+          float win2 = exp(-pow(length(rd - vec3(-0.55, 0.15, 0.45)) * 3.2, 2.0));
+          sky += vec3(1.0, 0.98, 0.94) * win * 1.15 + vec3(0.65, 0.78, 0.95) * win2 * 0.55;
+          return sky;
+        }
+
+        vec3 shade(vec3 p, vec3 n, vec3 rd) {
+          float g1 = noise3f(p * 52.0) - 0.5;
+          float g2 = noise3f(p * 118.0) - 0.5;
+          float micro = g1 * 0.65 + g2 * 0.35;
+          vec3 nMicro = normalize(n + vec3(g1, g2, -g1) * 0.014 * uMetalAmp);
+
+          vec3 v = -rd;
+          vec3 key = normalize(vec3(0.45, 0.85, 0.28));
+          vec3 fill = normalize(vec3(-0.6, 0.25, 0.35));
+          float sh = sceneShadow(p + n * 0.012, key);
+          float ao = sceneAO(p, n);
+          float ndv = clamp(dot(nMicro, v), 0.0, 1.0);
+          float fres = pow(1.0 - ndv, 4.0);
+          vec3 refl = normalize(rd - nMicro * (2.0 * dot(rd, nMicro)));
+          vec3 env = envColor(refl);
+
+          vec2 coreUv = clamp(refl.xz * 0.42 + p.xz * 0.25 + 0.5, 0.02, 0.98);
+          vec3 coreSheen = texture(uCoreTex, coreUv).rgb;
+          float coatWave = sin(refl.x * 4.5 + p.z * 3.0 + uTime * 0.6) * cos(refl.z * 4.5 - p.x * 3.0);
+          env = mix(env, env * 0.45 + coreSheen * 1.35, clamp(0.55 * uFlowAmp, 0.0, 1.0) * (0.35 + 0.65 * fres));
+          env += coreSheen * (0.10 + 0.08 * coatWave) * fres * uFlowAmp;
+
+          float rough = clamp(0.20 + micro * 0.06, 0.12, 0.32);
+          vec3 h1 = normalize(key + v);
+          vec3 h2 = normalize(fill + v);
+          float spec1 = pow(clamp(dot(nMicro, h1), 0.0, 1.0), mix(110.0, 26.0, rough)) * sh;
+          float spec2 = pow(clamp(dot(nMicro, h2), 0.0, 1.0), 42.0) * 0.38;
+          float ndl = clamp(dot(nMicro, key), 0.0, 1.0);
+          float F = mix(0.87, 1.0, fres);
+          float phase = ndv * 7.5 + float(uPalette) * 1.7 + p.x * 2.0 + uTime * 0.35;
+          vec3 irid = vec3(0.55 + 0.45 * sin(phase), 0.55 + 0.45 * sin(phase + 2.1), 0.55 + 0.45 * sin(phase + 4.2));
+          vec3 col = env * (0.92 + micro * 0.06);
+          col += irid * fres * 0.22 * uIridAmp;
+          col *= F;
+          col += vec3(1.08, 1.04, 0.98) * spec1 * 0.90 + vec3(0.75, 0.82, 0.95) * spec2;
+          col += vec3(0.18, 0.22, 0.28) * clamp(-nMicro.y * 0.5 + 0.5, 0.0, 1.0) * 0.14 * ao;
+          col = col * (0.82 + 0.18 * sh) + vec3(0.03, 0.035, 0.04) * (0.25 + 0.75 * ndl) * (1.0 - fres);
+          col *= mix(0.45, 1.0, ao);
+          col += envColor(nMicro) * pow(1.0 - ndv, 3.0) * ao * 0.20;
+          return col / (1.0 + col * 0.55);
         }
 
         void main() {
-          vec2 p = (vUv - uOrbCenter) / uOrbRadius;
-          vec2 sil = evalConceptSilhouette(p);
-          float r = sil.x;
-          float theta = mod(atan(p.y, p.x) + 6.28318530718, 6.28318530718);
-          float w = uTime * W24;
+          vec2 q = (vUv - 0.5) * 2.0;
+          float yaw = 0.62 + uPointer.x * 0.9 + uTime * 0.12;
+          float pitch = clamp(0.42 - uPointer.y * 0.45, 0.12, 1.05);
+          float dist = 2.85;
+          vec3 ro = vec3(sin(yaw) * cos(pitch), sin(pitch), cos(yaw) * cos(pitch)) * dist;
+          vec3 ww = normalize(-ro);
+          vec3 uu = normalize(cross(vec3(0.0, 1.0, 0.0), ww));
+          vec3 vv = cross(ww, uu);
+          vec3 rd = normalize(ww * 2.15 + uu * q.x + vv * q.y);
 
-          // Strictly pure #000000 black outside the sculpted silhouette halo
-          if (r >= 1.118) {
-            fragColor = vec4(0.0, 0.0, 0.0, 1.0);
-            return;
-          }
-
-          float effFlow    = uFlowAmp;
-          float effRelight = uRelightAmp;
-          float effIrid    = uIridAmp;
-          float effHalo    = uHaloAmp;
-
-          // 1. Evaluate Core (r <= 0.944) from GPU-synthesized & shock-super-resolved harmonic field
-          vec3 coreColor = vec3(0.0);
-          if (r <= 0.944) {
-            vec2 flowDisp = computeIncompressibleFlow(p, uTime, effFlow, uPointer);
-            vec2 p_adv = p + flowDisp;
-            float r_adv = length(p_adv);
-            if (r_adv > 0.925) {
-              p_adv *= (0.925 / r_adv);
+          float b = dot(rd, -ro);
+          float disc = b * b - (dot(ro, ro) - 1.25 * 1.25);
+          if (disc < 0.0 || b < 0.0) { fragColor = vec4(0.0, 0.0, 0.0, 1.0); return; }
+          float t = max(0.0, b - sqrt(disc));
+          for (int i = 0; i < 64; i++) {
+            vec3 pos = ro + rd * t;
+            float h = sceneSDF(pos);
+            if (h < 0.0012) {
+              fragColor = vec4(shade(pos, sceneNormal(pos), rd), 1.0);
+              return;
             }
-            vec2 uv_core = p_adv * 0.5 + 0.5;
-            coreColor = texture(uCoreTex, uv_core).rgb;
-
-            vec4 normData = texture(uNormTex, uv_core);
-            vec2 nxy_rest = normData.rg;
-            float nz_rest = sqrt(max(0.04, 1.0 - dot(nxy_rest, nxy_rest)));
-            vec3 N_rest = normalize(vec3(nxy_rest, nz_rest));
-            float dispMask = normData.b;
-
-            vec3 waveNH = computeWaveNormalAndHeight(p, uTime, uPointer);
-
-            // Smooth 3D liquid-chrome meniscus normal tilt along the non-spherical silhouette boundary
-            const float epsS = 0.0045;
-            float rRx = evalConceptSilhouette(p + vec2(epsS, 0.0)).x;
-            float rLx = evalConceptSilhouette(p - vec2(epsS, 0.0)).x;
-            float rUy = evalConceptSilhouette(p + vec2(0.0, epsS)).x;
-            float rDy = evalConceptSilhouette(p - vec2(0.0, epsS)).x;
-            vec2 silGrad = vec2((rRx - rLx) / (2.0 * epsS), (rUy - rDy) / (2.0 * epsS));
-            float gLen = length(silGrad);
-            if (gLen > 2.2) silGrad *= 2.2 / gLen;
-            float edgeCurve = smoothstep(0.45, 0.92, r);
-            vec2 silBevelN = silGrad * (0.24 * edgeCurve);
-
-            // Evaluate ultra-fine advected isotropic metallic micro-crystals
-            vec3 microFacet = evalMetallicMicroGrain(p_adv);
-            vec2 microNormPerturb = microFacet.xy * (0.0055 * uMetalAmp);
-            vec3 N_live = normalize(N_rest + vec3(waveNH.xy * 0.65 * effRelight + silBevelN + microNormPerturb, 0.0));
-            vec3 N_rest_faceted = normalize(N_rest + vec3(microNormPerturb * 0.50, 0.0));
-
-            // Metallic Chrome Surface Enhancement
-            float r2Norm = min((r * r) / (0.9385 * 0.9385), 1.0);
-            float metalEnv = max(0.0, 1.0 - r2Norm * r2Norm);
-
-            float luma = dot(coreColor, vec3(0.2126, 0.7152, 0.0722));
-            vec3 chromaDiff = coreColor - luma;
-
-            // Boundary-preserving monotonic S-curve chrome contrast + cool platinum-steel midtones
-            float sCurveLuma = clamp(luma - 0.052 * uMetalAmp * sin(6.2831853 * luma), 0.0, 1.0);
-            vec3 tintLow  = uPalette == 0 ? vec3(0.91, 0.97, 1.05) :
-                            (uPalette == 1 ? vec3(0.93, 0.96, 1.04) : vec3(0.90, 0.99, 1.02));
-            vec3 tintHigh = uPalette == 0 ? vec3(0.99, 1.01, 1.03) :
-                            (uPalette == 1 ? vec3(1.01, 1.00, 1.01) : vec3(0.98, 1.02, 1.01));
-            vec3 steelTint = mix(tintLow, tintHigh, smoothstep(0.40, 0.86, sCurveLuma));
-            vec3 metallicBase = clamp((sCurveLuma * steelTint) + chromaDiff * (1.0 + 0.12 * uMetalAmp), 0.0, 1.0);
-
-            coreColor = mix(coreColor, metallicBase, clamp(uMetalAmp * 0.62, 0.0, 1.0));
-
-            // Accumulate all specular/Fresnel/dispersion boosts and apply Filmic Highlight Headroom Compression (zero flat white clipping!)
-            vec3 totalBoost = vec3(0.0);
-
-            // Physical bead-blasted anodized silver micro-grain response (strongest in metallic midtones & specular grazing slopes)
-            float midtoneGrainEnv = smoothstep(0.04, 0.28, luma) * (1.0 - 0.32 * smoothstep(0.86, 0.98, luma));
-            float advectedGrain = microFacet.z * 0.0115 * uMetalAmp * midtoneGrainEnv * metalEnv;
-            totalBoost += vec3(0.94, 0.98, 1.04) * advectedGrain;
-
-            // Schlick grazing Fresnel metallic rim sheen along curved interior folds
-            float fresnel = pow(clamp(1.0 - N_live.z, 0.0, 1.0), 2.5) * 0.052 * uMetalAmp * metalEnv;
-            totalBoost += vec3(0.88, 0.95, 1.04) * fresnel;
-
-            // Smooth studio horizon reflection sheen across curved normals
-            float envSheen = sin(N_live.y * 3.8 - N_live.x * 2.4 + 1.1) * 0.018 * uMetalAmp * metalEnv * (1.0 - smoothstep(0.72, 0.94, luma));
-            totalBoost += vec3(0.92, 0.97, 1.04) * envSheen;
-
-            // Inner-core grazing rim highlight wire right before the 0.9385 glass shell boundary
-            float innerRimWire = 0.024 * exp(-0.5 * pow((r - 0.9348) / 0.0025, 2.0));
-            totalBoost += vec3(0.94, 0.98, 1.05) * innerRimWire;
-
-            if (effRelight > 0.0001 || effIrid > 0.0001 || effFlow > 0.0001) {
-              vec3 L1_rest = normalize(vec3(-0.36, -0.52, 0.77));
-              vec3 L2_rest = normalize(vec3( 0.52, -0.16, 0.84));
-              vec3 L3_rest = normalize(vec3( 0.06,  0.54, 0.84));
-
-              vec2 ptrLight = uPointer * 0.30;
-              vec3 L1_live = normalize(L1_rest + vec3(
-                0.24 * sin(3.0 * w) + 0.14 * cos(7.0 * w) + ptrLight.x,
-                0.22 * cos(4.0 * w) + 0.12 * sin(9.0 * w) + ptrLight.y,
-                0.0
-              ) * effRelight);
-              vec3 L2_live = normalize(L2_rest + vec3(
-                -0.22 * cos(5.0 * w + 0.6) + 0.14 * sin(3.0 * w) + ptrLight.x,
-                 0.24 * sin(4.0 * w + 0.6) - 0.12 * cos(7.0 * w) + ptrLight.y,
-                 0.0
-              ) * effRelight);
-              vec3 L3_live = normalize(L3_rest + vec3(
-                 0.24 * sin(7.0 * w + 1.2) - 0.14 * cos(2.0 * w),
-                -0.22 * cos(5.0 * w + 0.8) + 0.14 * sin(11.0 * w),
-                 0.0
-              ) * effRelight);
-
-              float specLive = evaluateChromeSpecular(N_live, L1_live, L2_live, L3_live, uMetalAmp);
-              float specRest = evaluateChromeSpecular(N_rest_faceted, L1_rest, L2_rest, L3_rest, uMetalAmp);
-              float deltaSpec = (specLive - specRest) * effRelight;
-
-              // Subtle micro-crystalline specular shimmer where studio lights graze the liquid-metal folds
-              float facetSparkle = (specLive - evaluateChromeSpecular(N_rest, L1_live, L2_live, L3_live, uMetalAmp)) * 0.22;
-
-              float envHere = evalStudioEnv(p);
-              float envAdv  = evalStudioEnv(p_adv);
-              float deltaEnv = (envHere - envAdv) * 0.42 * metalEnv;
-
-              float rawLightDelta = deltaSpec * 0.68 + facetSparkle + deltaEnv + waveNH.z * 0.52 * effRelight;
-              float safeLightDelta = softMetallicLightCurve(rawLightDelta);
-
-              totalBoost += vec3(0.94, 0.98, 1.04) * safeLightDelta;
-              vec3 iridShift = evaluateThinFilmDispersion(N_live, N_rest, p_adv, dispMask, uTime);
-              totalBoost += iridShift * (0.56 * effIrid);
-            }
-
-            // Filmic highlight shoulder rolloff: preserves 3D gradient curvature inside bright chrome domes
-            vec3 posBoost = max(totalBoost, vec3(0.0));
-            vec3 negBoost = min(totalBoost, vec3(0.0));
-            vec3 headroom = max(vec3(0.992) - coreColor, vec3(0.035));
-            coreColor = clamp(coreColor + headroom * tanh(posBoost / headroom) + negBoost, 0.0, 1.0);
+            t += h * 0.92;
+            if (t > 6.0) break;
           }
-
-          // 2. Evaluate Analytical Outer Glass/Chrome Shell Bezel (0.934 <= r <= 1.002)
-          vec3 sphereColor = coreColor;
-          if (r >= 0.934 && r <= 1.002) {
-            vec3 bezelColor = evalAnalyticalBezel(r, theta);
-            // Tactile machined satin-titanium / frosted-glass micro-grain on the outer containment shell
-            float bezelTex1 = valueNoiseGrad(p * 480.0 + vec2(19.4, 73.1)).z;
-            float bezelTex2 = valueNoiseGrad(vec2((p.x - p.y) * 380.0, (r - 0.9385) * 920.0)).z;
-            float bezelGrain = (bezelTex1 * 0.65 + bezelTex2 * 0.35) * 0.0105 * uMetalAmp;
-            bezelColor = clamp(bezelColor + vec3(0.94, 0.98, 1.04) * bezelGrain, 0.0, 1.0);
-
-            if (effHalo > 0.0001) {
-              float outerRimMask = exp(-pow((r - 0.9955) / 0.0050, 2.0));
-              float innerWallMask = exp(-pow((r - 0.9385) / 0.0060, 2.0));
-              float glassWallMask = smoothstep(0.938, 0.948, r) * smoothstep(0.998, 0.985, r);
-
-              float orbitGlint1 = pow(0.5 + 0.5 * cos(theta - 3.0 * w + 0.8), 4.0);
-              float orbitGlint2 = pow(0.5 + 0.5 * sin(theta + 5.0 * w - 0.5), 5.0);
-              float rimPulse = (orbitGlint1 * 0.78 + orbitGlint2 * 0.58) - 0.40;
-
-              vec3 rimHighlight = vec3(0.86, 0.95, 1.05) * (outerRimMask * 0.14 + innerWallMask * 0.12) * rimPulse;
-              float causticWave = sin(theta * 4.0 - 7.0 * w + r * 20.0) * 0.038;
-              vec3 glassCaustic = vec3(0.52, 0.84, 1.05) * glassWallMask * causticWave;
-              bezelColor += (rimHighlight + glassCaustic) * effHalo;
-            }
-            // Razor-sharp 4K analytical bevel at r = 0.9385
-            float coreMask = smoothstep(0.9385 + 0.0020, 0.9385 - 0.0020, r);
-            sphereColor = mix(bezelColor, coreColor, coreMask);
-          }
-
-          // 3. Evaluate Analytical Outer Atmospheric Halo & True 1-Pixel Sub-Pixel Silhouette Edge at r = 0.9985
-          vec3 finalColor = sphereColor;
-          if (r >= 0.995) {
-            vec3 haloColor = evalAnalyticalHalo(r, theta);
-            if (effHalo > 0.0001) {
-              float radialFade = smoothstep(1.116, 1.004, r);
-              float haloZone = exp(-max(0.0, r - 0.9985) * 18.0) * radialFade;
-              float haloBreath = 0.5 * sin(4.0 * w - r * 8.0)
-                               + 0.5 * cos(theta * 3.0 - 5.0 * w);
-              haloColor += vec3(0.55, 0.82, 1.05) * haloZone * haloBreath * 0.062 * effHalo;
-            }
-            float aa = max(fwidth(r) * 0.75, 0.00045);
-            float sphereMask = smoothstep(0.9985 + aa, 0.9985 - aa, r);
-            finalColor = mix(haloColor, sphereColor, sphereMask);
-          }
-
-          // 4. Post-Processed Metallic Crystalline Micro-Grain at Native Viewport/4K Resolution
-          // Luminance-coupled anodized silver grain (strictly zero on pure #000000 black background)
-          float finalLuma = dot(finalColor, vec3(0.2126, 0.7152, 0.0722));
-          float lumaResponse = smoothstep(0.02, 0.24, finalLuma) * (1.0 - 0.25 * smoothstep(0.88, 0.995, finalLuma));
-          float fineCrystal = blueMetallicDither(gl_FragCoord.xy);
-          float medCrystal  = valueNoiseGrad(gl_FragCoord.xy * 0.58 + p * 65.0).z;
-          float postGrain   = (fineCrystal * 0.65 + medCrystal * 0.35) * 0.0110 * max(uMetalAmp, 0.8) * lumaResponse;
-          float orbMask     = smoothstep(1.06, 0.992, r);
-          finalColor = clamp(finalColor + vec3(0.95, 0.98, 1.04) * (postGrain * orbMask), 0.0, 1.0);
-
-          fragColor = vec4(finalColor, 1.0);
+          fragColor = vec4(0.0, 0.0, 0.0, 1.0);
         }
       `;
 

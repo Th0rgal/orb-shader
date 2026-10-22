@@ -1,1083 +1,258 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maxwell / turbo-lean / lean-native — logo gallery</title>
-<style>
-  :root { color-scheme: dark; }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; background: #000; color: #d7e2ea; }
-  body { font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; }
-  .wrap { max-width: 1180px; margin: 0 auto; padding: 48px 28px 80px; }
-  h1 { font-weight: 500; font-size: 34px; letter-spacing: -0.01em; margin: 0 0 6px; color: #f4f7f8; }
-  h1 em { font-style: italic; color: #9fd8ee; }
-  .lede { max-width: 68ch; color: #9aa7b1; font-size: 17px; line-height: 1.5; margin: 0 0 28px; }
-  .stage { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 28px; align-items: start; }
-  canvas { width: 100%; height: auto; background: #000; border-radius: 18px; display: block; cursor: crosshair; }
-  .panel h2 { font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; color: #7d8b96; font-weight: 600; margin: 22px 0 10px; font-family: ui-sans-serif, system-ui, sans-serif; }
-  .panel h2:first-child { margin-top: 4px; }
-  .opts { display: flex; flex-direction: column; gap: 6px; }
-  .opts button { text-align: left; background: transparent; color: #c5d0d8; border: 1px solid rgba(255,255,255,0.08); border-radius: 9px; padding: 9px 12px; cursor: pointer; font: 14px/1.3 ui-sans-serif, system-ui, sans-serif; }
-  .opts button small { display: block; color: #7d8b96; font-size: 12px; }
-  .opts button.active { border-color: rgba(120, 200, 235, 0.7); color: #f4f7f8; background: rgba(120, 200, 235, 0.08); }
-  .row { display: flex; gap: 8px; flex-wrap: wrap; }
-  .row button, .ghost { background: transparent; color: #c5d0d8; border: 1px solid rgba(255,255,255,0.14); border-radius: 999px; padding: 7px 14px; cursor: pointer; font: 13px/1 ui-sans-serif, system-ui, sans-serif; }
-  .row button.active { border-color: rgba(120, 200, 235, 0.8); color: #9fd8ee; }
-  label.slider { display: flex; justify-content: space-between; font: 12px/1 ui-sans-serif, system-ui, sans-serif; color: #8b98a2; margin: 12px 0 4px; }
-  input[type=range] { width: 100%; accent-color: #79c6e6; }
-  .note { font: 12.5px/1.45 ui-sans-serif, system-ui, sans-serif; color: #6e7c86; margin-top: 18px; }
-  @media (max-width: 860px) { .stage { grid-template-columns: 1fr; } }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Maxwell · turbo-lean · lean-native — SVG Logos</title>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #000000;
+      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+      padding: 40px 28px 64px;
+    }
+    header {
+      max-width: 1240px;
+      margin: 0 auto 36px;
+    }
+    h1 {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 0 0 8px;
+    }
+    p.sub {
+      margin: 0;
+      color: #94a3b8;
+      font-size: 14px;
+    }
+    .grid {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 24px;
+    }
+    .card {
+      background: #000000;
+      border: 1px solid #1e293b;
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .art {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000000;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .art svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .meta {
+      width: 100%;
+      margin-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #f8fafc;
+    }
+    .desc {
+      margin-top: 6px;
+      font-size: 13px;
+      color: #94a3b8;
+      line-height: 1.45;
+      width: 100%;
+    }
+    a.dl {
+      font-size: 12px;
+      color: #7dd3fc;
+      text-decoration: none;
+      border: 1px solid #1e293b;
+      padding: 4px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    a.dl:hover {
+      border-color: #7dd3fc;
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>Three artifacts in <em>liquid metal &amp; crystal</em>.</h1>
-  <p class="lede">Real-time 3D raymarched sculptures for <strong>Maxwell</strong>, <strong>turbo-lean</strong>, and <strong>lean-native</strong> on a pure <code>#000000</code> void. Tuned to the platinum-silver &amp; ice-blue aesthetic of the original orb shader: <strong>Maxwell</strong> blends liquid metal with crystal, <strong>turbo-lean</strong> emphasizes sculpted silver-blue liquid metal, and <strong>lean-native</strong> emphasizes multi-bounce refractive crystal.</p>
-  <div class="stage">
-    <canvas id="canvas-shader" width="1024" height="1024"></canvas>
-    <div class="panel">
-      <h2>View</h2>
-      <div class="row" id="proj-row">
-        <button data-proj="1" class="active">1 · Maxwell</button>
-        <button data-proj="2">2 · turbo-lean</button>
-        <button data-proj="3">3 · lean-native</button>
-        <button data-proj="0">All 3 (Triptych)</button>
-      </div>
-      <h2>Sculpture</h2>
-      <div class="opts" id="concept-opts"></div>
-      <h2>Optics &amp; Material</h2>
-      <label class="slider"><span>liquid metal &harr; crystal</span><span id="val-metal">0.52</span></label>
-      <input id="ctrl-metal" type="range" min="0" max="1" step="0.01" value="0.52">
-      <label class="slider"><span>crystal IOR / refraction depth</span><span id="val-flow">1.56</span></label>
-      <input id="ctrl-flow" type="range" min="1.2" max="1.9" step="0.01" value="1.56">
-      <label class="slider"><span>ice-blue thin-film sheen</span><span id="val-irid">1.00</span></label>
-      <input id="ctrl-irid" type="range" min="0" max="2.0" step="0.01" value="1.00">
-      <div class="row" style="margin-top:16px">
-        <button id="btn-pause">pause</button>
-        <button id="btn-png">save png</button>
-      </div>
-      <p class="note" id="blurb"></p>
-    </div>
-  </div>
+  <header>
+    <h1>Maxwell · turbo-lean · lean-native — Logos SVG vectoriels</h1>
+    <p class="sub">Zéro shader. Géométrie vectorielle pure sur fond noir #000000, palette argent &amp; bleu glacé.</p>
+  </header>
+  <main class="grid">
+    <section class="card">
+      <div class="art"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" fill="none">
+  <rect width="512" height="512" fill="#000000"/>
+  <defs>
+    <linearGradient id="mx-metal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F8FAFC"/>
+      <stop offset="50%" stop-color="#94A3B8"/>
+      <stop offset="100%" stop-color="#F8FAFC"/>
+    </linearGradient>
+    <linearGradient id="mx-ice" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#E2E8F0"/>
+      <stop offset="100%" stop-color="#7DD3FC"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Left conjecture input loops -->
+  <path d="M 96 256 C 96 156, 188 148, 240 220" stroke="#94A3B8" stroke-width="6" stroke-linecap="round"/>
+  <path d="M 96 256 C 96 356, 188 364, 240 292" stroke="#94A3B8" stroke-width="6" stroke-linecap="round"/>
+  <line x1="96" y1="256" x2="232" y2="256" stroke="#E2E8F0" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Left nodes -->
+  <circle cx="96" cy="256" r="18" fill="#000000" stroke="#F8FAFC" stroke-width="6"/>
+  <circle cx="96" cy="256" r="6" fill="#7DD3FC"/>
+  <circle cx="140" cy="184" r="9" fill="#000000" stroke="#94A3B8" stroke-width="5"/>
+  <circle cx="140" cy="328" r="9" fill="#000000" stroke="#94A3B8" stroke-width="5"/>
+
+  <!-- Right sorted / certified trajectories -->
+  <path d="M 272 236 C 316 236, 336 132, 396 124" stroke="url(#mx-ice)" stroke-width="6" stroke-linecap="round"/>
+  <path d="M 272 246 C 324 246, 344 190, 422 184" stroke="#F8FAFC" stroke-width="6" stroke-linecap="round"/>
+  <path d="M 272 256 L 380 256" stroke="#94A3B8" stroke-width="5" stroke-linecap="round" stroke-dasharray="10 10"/>
+  <path d="M 272 266 C 324 266, 344 322, 422 328" stroke="#F8FAFC" stroke-width="6" stroke-linecap="round"/>
+  <path d="M 272 276 C 316 276, 336 380, 396 388" stroke="url(#mx-ice)" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Right certified nodes -->
+  <circle cx="396" cy="124" r="15" fill="#000000" stroke="#7DD3FC" stroke-width="6"/>
+  <circle cx="422" cy="184" r="20" fill="#F8FAFC"/>
+  <circle cx="384" cy="256" r="7" fill="#64748B"/>
+  <circle cx="422" cy="328" r="20" fill="#F8FAFC"/>
+  <circle cx="396" cy="388" r="15" fill="#000000" stroke="#7DD3FC" stroke-width="6"/>
+
+  <!-- Central Maxwell Gate (biconvex spindle + aperture ring) -->
+  <path d="M 256 68 C 282 148, 282 364, 256 444 C 230 364, 230 148, 256 68 Z" fill="#000000" stroke="url(#mx-metal)" stroke-width="6" stroke-linejoin="round"/>
+  <line x1="256" y1="84" x2="256" y2="428" stroke="#38BDF8" stroke-width="2" stroke-opacity="0.65"/>
+  <circle cx="256" cy="256" r="26" fill="#000000" stroke="#F8FAFC" stroke-width="6"/>
+  <circle cx="256" cy="256" r="9" fill="#7DD3FC"/>
+</svg>
 </div>
-<script src="orb_assets.js"></script>
-<script>
-  const CONCEPTS = [
-    [1, "1 · Maxwell — The Maxwell Gate", "Hybrid liquid-metal & crystal spindle gate with left C-loop network and 9 right S-curved certification tendrils."],
-    [2, "2 · turbo-lean — 6-Blade Liquid-Metal Impeller", "Silver-blue liquid-mercury hub, double-lip containment ring, and 6 overlapping concavo-convex spiral blades."],
-    [3, "3 · lean-native — Isometric Crystal Lattice", "Cohesive 3×3×3 refractive ice-crystal cube lattice with chamfered cross-channels and a suspended central core cube."],
-    [0, "Triptych — All 3 Side-by-Side", "Panoramic studio lineup of Maxwell (hybrid), turbo-lean (liquid metal), and lean-native (refractive crystal)."]
-  ];
-  const PRESET_METAL = { 1: 0.52, 2: 0.94, 3: 0.04, 0: 0.52 };
-  const state = { concept: 1, palette: 0, flowAmp: 1.56, metalAmp: 0.52, relightAmp: 1.25, iridAmp: 1.00 };
-</script>
-<script>
-
-    (function () {
-      const params = new URLSearchParams(window.location.search);
-      const cleanMode = params.get('clean') === '1';
-      const is4KMode = params.get('res') === '4k';
-      const customW = params.has('w') ? parseInt(params.get('w'), 10) : null;
-      const customH = params.has('h') ? parseInt(params.get('h'), 10) : null;
-      const customRad = params.has('r') ? parseFloat(params.get('r')) : null;
-      const fixedTime = params.has('t') ? parseFloat(params.get('t')) : null;
-      const ampOverride = params.has('amp') ? parseFloat(params.get('amp')) : null;
-
-      if (cleanMode) {
-        document.body.classList.add('clean-mode');
-      }
-
-      const canvasShader = document.getElementById('canvas-shader');
-      if (customW && customH) {
-        canvasShader.width = customW;
-        canvasShader.height = customH;
-        canvasShader.style.aspectRatio = `${customW} / ${customH}`;
-      } else if (is4KMode) {
-        canvasShader.width = 3840;
-        canvasShader.height = 4126;
-      }
-
-      state.speed = 1.00;
-      Object.assign(state, {
-        paused: fixedTime !== null,
-        time: fixedTime !== null ? fixedTime : 0.35,
-        flowAmp: ampOverride !== null ? ampOverride : 1.35,
-        metalAmp: 0.52,
-        relightAmp: ampOverride !== null ? ampOverride : 1.25,
-        iridAmp: ampOverride !== null ? ampOverride : 1.45,
-        haloAmp: 1.35,
-        pointerX: 0.0,
-        pointerY: 0.0,
-        targetPointerX: 0.0,
-        targetPointerY: 0.0
-      });
-
-      const gl = canvasShader.getContext('webgl2', { antialias: true, preserveDrawingBuffer: true });
-      gl.getExtension('EXT_color_buffer_float');
-      gl.getExtension('OES_texture_float_linear');
-
-      function compileShader(type, src) {
-        const sh = gl.createShader(type);
-        gl.shaderSource(sh, src);
-        gl.compileShader(sh);
-        if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
-          console.error('Shader compile error:', gl.getShaderInfoLog(sh));
-        }
-        return sh;
-      }
-
-      function createProgram(vsSrc, fsSrc) {
-        const p = gl.createProgram();
-        gl.attachShader(p, compileShader(gl.VERTEX_SHADER, vsSrc));
-        gl.attachShader(p, compileShader(gl.FRAGMENT_SHADER, fsSrc));
-        gl.linkProgram(p);
-        if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
-          console.error('Program link error:', gl.getProgramInfoLog(p));
-        }
-        return p;
-      }
-
-      const vsFbo = `#version 300 es
-        in vec2 aPosition;
-        out vec2 vUv;
-        void main() {
-          vUv = aPosition * 0.5 + 0.5;
-          gl_Position = vec4(aPosition, 0.0, 1.0);
-        }
-      `;
-
-      const vsScreen = `#version 300 es
-        in vec2 aPosition;
-        out vec2 vUv;
-        void main() {
-          vUv = vec2(aPosition.x * 0.5 + 0.5, 0.5 - aPosition.y * 0.5);
-          gl_Position = vec4(aPosition, 0.0, 1.0);
-        }
-      `;
-
-      // Pass 1A: Synthesize 1D Fourier Angular Harmonics F_k(theta) on a (1024 x 60) GPU texture
-      const fsSynthAng = `#version 300 es
-        precision highp float;
-        in vec2 vUv;
-        out vec4 fragColor;
-        uniform sampler2D uSpecTex;
-
-        void main() {
-          int k = int(gl_FragCoord.y);
-          float theta = vUv.x * 6.28318530718;
-          float kf = float(k);
-
-          vec3 sum = vec3(0.0);
-          float sumSmooth = 0.0;
-
-          for (int m = 1; m <= 60; ++m) {
-            float mf = float(m);
-            float ang = mf * theta;
-            float cs = cos(ang);
-            float sn = sin(ang);
-            vec3 wc = texelFetch(uSpecTex, ivec2(2 * m - 1, k), 0).rgb;
-            vec3 ws = texelFetch(uSpecTex, ivec2(2 * m,     k), 0).rgb;
-            vec3 term = wc * cs + ws * sn;
-            sum += term;
-            float w_s = exp(-0.5 * pow((mf * mf) / 196.0 + (kf * kf) / 256.0, 2.0));
-            sumSmooth += term.r * w_s;
-          }
-          fragColor = vec4(sum, sumSmooth);
-        }
-      `;
-
-      // Pass 1B: Synthesize 2D Orthogonal Cosine Radial Series on a (2048 x 2048) GPU texture
-      const fsSynthRad = `#version 300 es
-        precision highp float;
-        in vec2 vUv;
-        out vec4 fragColor;
-        uniform sampler2D uAngTex;
-        uniform sampler2D uSpecTex;
-
-        const float S_CORE_FIT = 0.9365;
-
-        void main() {
-          vec2 p = (vUv - 0.5) * 2.0;
-          float s = min(length(p), S_CORE_FIT);
-          float theta = mod(atan(p.y, p.x) + 6.28318530718, 6.28318530718);
-          float u_th = theta / 6.28318530718;
-          float s_norm = s / S_CORE_FIT;
-
-          // Guarantee C-infinity smoothness at the polar origin s = 0 without altering central basin luminance
-          float originTaper = smoothstep(0.0, 0.035, s);
-
-          vec3 m0Sum = vec3(0.0);
-          float m0Smooth = 0.0;
-          vec4 angTotal = vec4(0.0);
-
-          for (int k = 0; k < 60; ++k) {
-            float kf = float(k);
-            float radCos = cos(kf * 3.14159265359 * s_norm);
-            vec3 w0 = texelFetch(uSpecTex, ivec2(0, k), 0).rgb;
-            m0Sum += w0 * radCos;
-            m0Smooth += w0.r * exp(-0.5 * pow(kf / 16.0, 4.0)) * radCos;
-
-            float v_k = (kf + 0.5) / 60.0;
-            vec4 angVal = texture(uAngTex, vec2(u_th, v_k));
-            angTotal += angVal * radCos;
-          }
-
-          vec3 totalRGB = m0Sum + angTotal.rgb * originTaper;
-          float totalSmooth = m0Smooth + angTotal.a * originTaper;
-
-          float L = totalRGB.r;
-          float CR = totalRGB.g;
-          float CB = totalRGB.b;
-          float CG = -(0.2126 * CR + 0.0722 * CB) / 0.7152;
-          vec3 rgb = clamp(vec3(L + CR, L + CG, L + CB), 0.0, 1.0);
-          fragColor = vec4(rgb, totalSmooth);
-        }
-      `;
-
-      // Pass 2: 2D Isotropic Osher-Rudin Shock-Wave Ridge Steepening on (2048 x 2048) GPU texture
-      const fsShock = `#version 300 es
-        precision highp float;
-        in vec2 vUv;
-        out vec4 fragColor;
-        uniform sampler2D uInTex;
-
-        void main() {
-          vec2 p = (vUv - 0.5) * 2.0;
-          float s = length(p);
-          vec4 center = texture(uInTex, vUv);
-          if (s >= 0.935 || s <= 0.14) {
-            fragColor = center;
-            return;
-          }
-          const float eps = 4.0 / 2048.0;
-          const vec3 lumaW = vec3(0.2126, 0.7152, 0.0722);
-          float lC = dot(center.rgb, lumaW);
-          float lR = dot(texture(uInTex, vUv + vec2(eps, 0.0)).rgb, lumaW);
-          float lL = dot(texture(uInTex, vUv - vec2(eps, 0.0)).rgb, lumaW);
-          float lU = dot(texture(uInTex, vUv + vec2(0.0, eps)).rgb, lumaW);
-          float lD = dot(texture(uInTex, vUv - vec2(0.0, eps)).rgb, lumaW);
-
-          vec2 grad = vec2(lR - lL, lU - lD);
-          float lap = (lR + lL + lU + lD - 4.0 * lC);
-          float gMag = length(grad) + 1e-6;
-          float interiorW = smoothstep(0.935, 0.900, s) * smoothstep(0.14, 0.26, s);
-          float ridgeMask = smoothstep(0.004, 0.024, gMag);
-          vec2 shift = -0.0014 * interiorW * ridgeMask * tanh(lap * 26.0) * (grad / gMag);
-          vec3 rgbSharp = texture(uInTex, vUv + shift).rgb;
-          fragColor = vec4(rgbSharp, center.a);
-        }
-      `;
-
-      // Pass 3: Analytical 32-bit Surface Normal & Dispersion Mask Extraction on (2048 x 2048) GPU texture
-      const fsNorm = `#version 300 es
-        precision highp float;
-        in vec2 vUv;
-        out vec4 fragColor;
-        uniform sampler2D uCoreTex;
-
-        void main() {
-          vec2 p = (vUv - 0.5) * 2.0;
-          float r = length(p);
-          const float eps = 12.0 / 2048.0;
-          float hC = texture(uCoreTex, vUv).a;
-          float hR = texture(uCoreTex, vUv + vec2(eps, 0.0)).a;
-          float hL = texture(uCoreTex, vUv - vec2(eps, 0.0)).a;
-          float hU = texture(uCoreTex, vUv + vec2(0.0, eps)).a;
-          float hD = texture(uCoreTex, vUv - vec2(0.0, eps)).a;
-
-          vec2 gradH = vec2(hR - hL, hU - hD) * 0.5;
-          vec2 nSphere = p * 0.58;
-          vec2 nxy = clamp(nSphere - gradH * 2.8, -0.86, 0.86);
-
-          vec3 rgb = texture(uCoreTex, vUv).rgb;
-          float luma = dot(rgb, vec3(0.2126, 0.7152, 0.0722));
-          float gMag = length(gradH);
-          float dispMask = clamp(smoothstep(0.42, 0.88, luma) * 0.50 + smoothstep(0.015, 0.09, gMag) * 0.45, 0.0, 1.0);
-
-          fragColor = vec4(nxy, dispMask, luma);
-        }
-      `;
-
-      // Pass 4: Maxwell / turbo-lean / lean-native — liquid metal <-> crystal glass
-      const fsRender = `#version 300 es
-        precision highp float;
-
-        in vec2 vUv;
-        out vec4 fragColor;
-
-        uniform sampler2D uCoreTex;
-        uniform float uTime;
-        uniform float uFlowAmp;
-        uniform float uMetalAmp;
-        uniform float uIridAmp;
-        uniform vec2 uPointer;
-        uniform int uConcept;
-
-        const float PI = 3.14159265359;
-
-
-        int gMode = 1;
-        float clamp01(float x) { return clamp(x, 0.0, 1.0); }
-        vec3 op_add(vec3 a, vec3 b) { return a + b; }
-        vec3 op_sub(vec3 a, vec3 b) { return a - b; }
-        vec3 op_mul(vec3 a, float s) { return a * s; }
-        float maxc(vec3 a) { return max(a.x, max(a.y, a.z)); }
-        float op_smin(float a, float b, float k) {
-          float h = max(k - abs(a - b), 0.0) / max(k, 1e-5);
-          return min(a, b) - h * h * h * k * (1.0 / 6.0);
-        }
-        float op_smax(float a, float b, float k) { return -op_smin(-a, -b, k); }
- float op_maxwellCrystalFactor(vec3 p) {
-    
-    float spindleBlade = exp(-38.0 * p.x * p.x) * smoothstep(0.08, 0.20, abs(p.y));
-    float c = spindleBlade;
-    
-    const float SC[24] = float[](
-        -0.66,  0.23, 0.060, -0.66, -0.23, 0.060,
-         0.62,  0.58, 0.105,  0.75,  0.34, 0.125,
-         0.56,  0.14, 0.060,  0.75, -0.18, 0.115,
-         0.48, -0.44, 0.062,  0.64, -0.56, 0.102
-    );
-    for (int i = 0; i < 8; i++) {
-        float dx = p.x - SC[i*3+0], dy = p.y - SC[i*3+1];
-        float r = sqrt(dx * dx + dy * dy + p.z * p.z);
-        float w = smoothstep(SC[i*3+2] * 1.35, SC[i*3+2] * 0.75, r);
-        if (w > c) c = w;
-    }
-    return c;
-}
- float op_sdSphere(vec3 p, float r) { return length(p) - r; }
- float op_sdCapsule(vec3 p, vec3 a, vec3 b, float ra, float rb) {
-    vec3 pa = op_sub(p, a), ba = op_sub(b, a);
-    float h = clamp01(dot(pa, ba) / max(dot(ba, ba), 1e-8));
-    return length(op_sub(pa, op_mul(ba, h))) - mix(ra, rb, h);
-}
- float op_sdRoundBox(vec3 p, vec3 b, float r) {
-    vec3 q = op_sub(abs(p), op_sub(b, vec3(r, r, r)));
-    return length(max(q, vec3(0.0, 0.0, 0.0))) + min(maxc(q), 0.0) - r;
-}
-
- float op_sdBez3(vec3 p, vec3 p0, vec3 p1, vec3 p2, vec3 p3, float r0, float r1) {
-    float best = 1e9;
-    vec3 prev = p0;
-    float prevR = r0;
-    for (int i = 1; i <= 16; i++) {
-        float t = float(i) / 16.0, u = 1.0 - t;
-        vec3 cur = op_add(
-            op_add(op_mul(p0, u * u * u), op_mul(p1, 3.0 * u * u * t)),
-            op_add(op_mul(p2, 3.0 * u * t * t), op_mul(p3, t * t * t)));
-        float curR = mix(r0, r1, pow(t, 0.7)) + 0.014 * exp(-12.0 * t) + 0.008 * exp(-16.0 * (1.0 - t));
-        float d = op_sdCapsule(p, prev, cur, prevR, curR);
-        if (d < best) best = d;
-        prev = cur;
-        prevR = curR;
-    }
-    return best;
-}
-
- float op_sceneMaxwell(vec3 p) {
-    
-    float u = clamp01(abs(p.y) / 0.65);
-    float bell = pow(max(0.0, 1.0 - u * u), 1.45) * (0.50 + 0.55 * exp(-8.5 * u * u));
-    float rx = 0.088 * bell + 0.002;
-    float rz = 0.215 * bell + 0.002;
-    float ell = (sqrt((p.x / rx) * (p.x / rx) + (p.z / rz) * (p.z / rz)) - 1.0) * min(rx, rz);
-    float cap = abs(p.y) - 0.65;
-    float d = sqrt(max(ell, 0.0) * max(ell, 0.0) + max(cap, 0.0) * max(cap, 0.0))
-              + min(max(ell, cap), 0.0);
-    
-    float nozzle = op_sdCapsule(p, vec3(-0.10, 0.0, 0.0), vec3(0.11, 0.0, 0.0), 0.052, 0.064);
-    d = op_smin(d, nozzle, 0.062);
-    float eqRidge = sqrt(p.x * p.x * 2.2 + (sqrt(p.y * p.y + p.z * p.z) - 0.095) * (sqrt(p.y * p.y + p.z * p.z) - 0.095)) - 0.018;
-    d = op_smin(d, eqRidge, 0.035);
-
-    
-    vec3 A = vec3(-0.80, 0.0, 0.0);
-    d = op_smin(d, op_sdSphere(op_sub(p, A), 0.072), 0.062);
-    d = op_smin(d, op_sdCapsule(p, vec3(-0.74, 0, 0), vec3(-0.07, 0, 0), 0.013, 0.022), 0.052);
-    d = op_smin(d, op_sdSphere(op_sub(p, vec3(-0.44, 0, 0)), 0.028), 0.034);
-
-    d = op_smin(d, op_sdBez3(p, A, vec3(-0.88, 0.29, 0.05), vec3(-0.42, 0.37, -0.04), vec3(-0.04, 0.31, 0.0), 0.016, 0.022), 0.060);
-    d = op_smin(d, op_sdBez3(p, A, vec3(-0.88, -0.29, -0.05), vec3(-0.42, -0.37, 0.04), vec3(-0.04, -0.31, 0.0), 0.016, 0.022), 0.060);
-    d = op_smin(d, op_sdSphere(op_sub(p, vec3(-0.66, 0.23, 0.025)), 0.046), 0.044);
-    d = op_smin(d, op_sdSphere(op_sub(p, vec3(-0.66, -0.23, -0.025)), 0.046), 0.044);
-
-    d = op_smin(d, op_sdBez3(p, vec3(-0.06, 0.05, 0), vec3(-0.20, 0.19, 0.025), vec3(-0.36, 0.21, 0), vec3(-0.50, 0.17, 0), 0.013, 0.008), 0.032);
-    d = op_smin(d, op_sdSphere(op_sub(p, vec3(-0.50, 0.17, 0)), 0.020), 0.022);
-    d = op_smin(d, op_sdBez3(p, vec3(-0.06, 0.02, 0), vec3(-0.15, 0.09, -0.025), vec3(-0.23, 0.09, 0), vec3(-0.31, 0.07, 0), 0.011, 0.007), 0.028);
-    d = op_smin(d, op_sdSphere(op_sub(p, vec3(-0.31, 0.07, 0)), 0.016), 0.018);
-    d = op_smin(d, op_sdBez3(p, vec3(-0.06, -0.05, 0), vec3(-0.20, -0.19, -0.025), vec3(-0.36, -0.21, 0), vec3(-0.50, -0.17, 0), 0.013, 0.008), 0.032);
-    d = op_smin(d, op_sdSphere(op_sub(p, vec3(-0.50, -0.17, 0)), 0.020), 0.022);
-    d = op_smin(d, op_sdBez3(p, vec3(-0.06, -0.02, 0), vec3(-0.15, -0.09, 0.025), vec3(-0.23, -0.09, 0), vec3(-0.31, -0.07, 0), 0.011, 0.007), 0.028);
-    d = op_smin(d, op_sdSphere(op_sub(p, vec3(-0.31, -0.07, 0)), 0.016), 0.018);
-
-    
-    const float E[36] = float[](
-        0.62,  0.58, 0.084,  0.045,
-        0.46,  0.40, 0.044, -0.035,
-        0.75,  0.34, 0.104,  0.025,
-        0.56,  0.14, 0.046, -0.025,
-        0.52, -0.02, 0.022,  0.015,
-        0.75, -0.18, 0.094, -0.035,
-        0.52, -0.26, 0.023,  0.025,
-        0.48, -0.44, 0.048, -0.025,
-        0.64, -0.56, 0.082,  0.035
-    );
-    for (int i = 0; i < 9; i++) {
-        float ex = E[i*4+0], ey = E[i*4+1], er = E[i*4+2], ez = E[i*4+3];
-        vec3 p0 = vec3(0.06, ey * 0.10, 0.0);
-        vec3 p1 = vec3(0.19, ey * 0.96, ez * 1.4);
-        vec3 p2 = vec3(ex * 0.56, ey * 0.86, ez * 0.6);
-        vec3 p3 = vec3(ex, ey, ez * 0.3);
-        d = op_smin(d, op_sdBez3(p, p0, p1, p2, p3, 0.025, 0.009), 0.062);
-        d = op_smin(d, op_sdSphere(op_sub(p, p3), er), 0.048);
-    }
-    return d * 0.85;
-}
-
- float op_sceneTurbo(vec3 p) {
-    float d = op_sdSphere(p, 0.155);
-    float rad = sqrt(p.x * p.x + p.y * p.y);
-
-    
-    float dr1 = rad - 0.678, dr2 = rad - 0.644;
-    float lipOuter = sqrt(dr1 * dr1 + p.z * p.z * 1.15) - 0.032;
-    float lipInner = sqrt(dr2 * dr2 + (p.z - 0.010) * (p.z - 0.010) * 1.35) - 0.024;
-    float ring = op_smin(lipOuter, lipInner, 0.014);
-
-    float baseAng = atan(p.y, p.x);
-    float span = clamp01((rad - 0.140) / 0.505);
-    
-    float twist = 1.92 * (rad - 0.145) + 0.28 * sin(span * PI);
-    float sector = PI / 3.0;
-    float bestBlade = 1e9;
-    float k0 = floor((baseAng + twist) / sector + 0.5);
-    for (int dk = -1; dk <= 1; dk++) {
-        float centerAng = (k0 + float(dk)) * sector - twist;
-        float da = baseAng - centerAng;
-        da = atan(sin(da), cos(da));
-        float halfW = 0.038 + 0.142 * sin(pow(span, 0.78) * PI);
-        float u = clamp((da * rad) / max(halfW, 1e-3), -1.5, 1.5);
-        
-        float uShift = u + 0.20;
-        float crest = exp(-4.5 * uShift * uShift);
-        float scoop = exp(-5.5 * (u - 0.35) * (u - 0.35));
-        float env = sin(0.12 + 0.88 * span * PI);
-        float zFront = (0.105 * max(0.0, 1.0 - 0.62 * u * u) + 0.072 * crest - 0.034 * scoop - 0.048 * u) * env;
-        float zBack  = (-0.055 * max(0.0, 1.0 - 0.50 * u * u) - 0.022 * crest) * (1.0 - 0.30 * span);
-        float zMid = 0.5 * (zFront + zBack);
-        float zHalf = max(0.5 * (zFront - zBack), 0.012);
-        float side = abs(da) * rad - halfW;
-        float thick = abs(p.z - zMid) - zHalf;
-        float b = sqrt(max(side, 0.0) * max(side, 0.0) + max(thick, 0.0) * max(thick, 0.0))
-                  + min(max(side, thick), 0.0) - 0.014;
-        bestBlade = op_smin(bestBlade, b, 0.018);
-    }
-    bestBlade = op_smax(bestBlade, 0.138 - rad, 0.020);
-    
-    bestBlade = op_smax(bestBlade, rad - 0.638, 0.022);
-    d = op_smin(d, bestBlade, 0.038);
-    d = op_smin(d, ring, 0.022);
-    return d * 0.72;
-}
-
- vec3 op_nativeRot(vec3 p) {
-    float yaw = PI / 4.0, pitch = -0.6154797;
-    float cy = cos(yaw), sy = sin(yaw);
-    p = vec3(cy * p.x + sy * p.z, p.y, -sy * p.x + cy * p.z);
-    float cx = cos(pitch), sx = sin(pitch);
-    return vec3(p.x, cx * p.y - sx * p.z, sx * p.y + cx * p.z);
-}
-
- float op_sceneNative(vec3 p) {
-    p = op_nativeRot(p);
-    vec3 ap = abs(p);
-
-    
-    float outer = op_sdRoundBox(p, vec3(0.440, 0.440, 0.440), 0.032);
-
-    
-    float chX = op_sdRoundBox(p, vec3(0.50, 0.056, 0.056), 0.015);
-    float chY = op_sdRoundBox(p, vec3(0.056, 0.50, 0.056), 0.015);
-    float chZ = op_sdRoundBox(p, vec3(0.056, 0.056, 0.50), 0.015);
-    float channels = op_smin(chX, op_smin(chY, chZ, 0.016), 0.016);
-
-    
-    float gX = abs(ap.x - 0.056) - 0.008;
-    float gY = abs(ap.y - 0.056) - 0.008;
-    float gZ = abs(ap.z - 0.056) - 0.008;
-    float grooves = min(gX, min(gY, gZ));
-    float frame = op_smax(outer, -channels, 0.022);
-    frame = op_smax(frame, -grooves, 0.012);
-
-    
-    float core = op_sdRoundBox(p, vec3(0.132, 0.132, 0.132), 0.022);
-    return min(frame, core);
-}
-
- float op_sceneSDF(vec3 p) {
-    if (gMode == 1) return op_sceneMaxwell(p);
-    if (gMode == 2) return op_sceneTurbo(p);
-    return op_sceneNative(p);
-}
-
- vec3 op_sceneNormal(vec3 p) {
-    const float e = 0.0010;
-    return normalize(vec3(
-        op_sceneSDF(op_add(p, vec3(e, 0, 0))) - op_sceneSDF(op_sub(p, vec3(e, 0, 0))),
-        op_sceneSDF(op_add(p, vec3(0, e, 0))) - op_sceneSDF(op_sub(p, vec3(0, e, 0))),
-        op_sceneSDF(op_add(p, vec3(0, 0, e))) - op_sceneSDF(op_sub(p, vec3(0, 0, e)))));
-}
-
- float op_sceneAO(vec3 p, vec3 n) {
-    float occ = 0.0, sc = 1.0;
-    for (int i = 1; i <= 4; i++) {
-        float h = 0.028 * float(i);
-        float d = op_sceneSDF(op_add(p, op_mul(n, h)));
-        occ += max(h - d, 0.0) * sc;
-        sc *= 0.55;
-    }
-    return clamp01(1.0 - 2.2 * occ);
-}
-
- vec3 op_envColor(vec3 rd) {
-    vec3 d = normalize(vec3(rd.x, rd.y, abs(rd.z)));
-    
-    vec3 c = vec3(0.085, 0.115, 0.165);
-    float sky = 0.5 + 0.5 * d.y;
-    c = op_add(c, op_mul(vec3(0.24, 0.30, 0.40), sky));
-    float rib1 = exp(-16.0 * (d.y - 0.32 + 0.16 * d.x) * (d.y - 0.32 + 0.16 * d.x)) * smoothstep(-0.65, 0.55, -d.x);
-    float rib2 = exp(-18.0 * (d.y + 0.28 - 0.14 * d.x) * (d.y + 0.28 - 0.14 * d.x)) * smoothstep(-0.55, 0.65, d.x);
-    float rib3 = exp(-24.0 * (d.x + 0.38) * (d.x + 0.38)) * smoothstep(-0.40, 0.70, d.y);
-    c = op_add(c, op_mul(vec3(1.35, 1.42, 1.54), rib1));
-    c = op_add(c, op_mul(vec3(0.75, 0.98, 1.38), rib2 * 0.90));
-    c = op_add(c, op_mul(vec3(1.05, 1.15, 1.30), rib3 * 0.78));
-    vec3 Ldir[5] = vec3[](vec3(-0.32,0.58,0.75), vec3(0.54,0.20,0.82), vec3(-0.66,-0.20,0.72), vec3(0.14,-0.62,0.77), vec3(0.0,0.88,0.47));
-    vec3 Lcol[5] = vec3[](vec3(2.85,3.00,3.20), vec3(1.75,1.95,2.25), vec3(0.88,1.25,1.85), vec3(1.35,1.58,1.95), vec3(2.20,2.35,2.55));
-    float Lk[5] = float[](18.0, 16.0, 12.0, 14.0, 20.0);
-    for (int i = 0; i < 5; i++) {
-        float s = clamp01(dot(d, normalize(Ldir[i])));
-        c = op_add(c, op_mul(Lcol[i], pow(s, Lk[i])));
-    }
-    return c;
-}
-
- vec3 op_evalSilverBlueSheen(vec3 p, vec3 n) {
-    float phase = 3.2 * (p.x * 0.8 - p.y * 0.6) + 4.0 * (n.x * 0.6 - n.y * 0.8);
-    vec3 iceCyan    = vec3(-0.04, 0.065, 0.155);
-    vec3 steelBlue  = vec3(-0.02, 0.030, 0.135);
-    vec3 pureSilver = vec3( 0.12, 0.140, 0.170);
-    float o1 = sin(phase);
-    float o2 = cos(phase * 1.15 + 0.7);
-    float glint = pow(0.5 + 0.5 * sin(phase - 0.4), 3.0);
-    return op_add(op_add(op_mul(iceCyan, o1 * 0.45), op_mul(steelBlue, o2 * 0.35)), op_mul(pureSilver, glint * 0.55));
-}
-
- vec3 op_shadeMetal(vec3 p, vec3 n, vec3 rd) {
-    float ao = op_sceneAO(p, n);
-    float ndv = clamp01(dot(n, op_mul(rd, -1.0)));
-    float fres = pow(1.0 - ndv, 2.2);
-    vec3 refl = normalize(op_sub(rd, op_mul(n, 2.0 * dot(n, rd))));
-    vec3 env = op_envColor(refl);
-    
-    float waveBand = 0.5 + 0.5 * sin(n.y * 4.2 - n.x * 3.1 + p.z * 5.0);
-    vec3 envMod = op_mul(env, 0.48 + 0.82 * pow(waveBand, 1.35));
-    vec3 steelTint = vec3(0.95, 0.99, 1.05);
-    vec3 F = op_add(op_mul(steelTint, 1.0 - fres), op_mul(vec3(1.10, 1.14, 1.20), fres));
-    vec3 col = vec3(envMod.x * F.x, envMod.y * F.y, envMod.z * F.z);
-    
-    float luma = 0.2126 * col.x + 0.7152 * col.y + 0.0722 * col.z;
-    float sLuma = max(0.0, luma - 0.16 * sin(6.2831853 * clamp01(luma)));
-    float ratio = sLuma / max(luma, 1e-4);
-    col = op_mul(col, mix(1.0, ratio, 0.62));
-    col = op_add(col, op_mul(op_evalSilverBlueSheen(p, n), uIridAmp));
-    
-    vec3 L1 = normalize(vec3(-0.34, 0.58, 0.74));
-    vec3 L2 = normalize(vec3( 0.50,-0.24, 0.83));
-    vec3 L3 = normalize(vec3( 0.04, 0.62, 0.78));
-    vec3 v = op_mul(rd, -1.0);
-    float ndh1 = clamp01(dot(n, normalize(op_add(L1, v))));
-    float ndh2 = clamp01(dot(n, normalize(op_add(L2, v))));
-    float ndh3 = clamp01(dot(n, normalize(op_add(L3, v))));
-    float spec1 = 0.24 * pow(ndh1, 14.0) + 0.75 * pow(ndh1, 64.0) + 2.45 * pow(ndh1, 220.0);
-    float spec2 = 0.20 * pow(ndh2, 16.0) + 0.60 * pow(ndh2, 72.0) + 1.85 * pow(ndh2, 190.0);
-    float spec3 = 0.18 * pow(ndh3, 12.0) + 0.48 * pow(ndh3, 48.0);
-    col = op_add(col, op_mul(vec3(1.02, 1.05, 1.12), spec1 + spec3));
-    col = op_add(col, op_mul(vec3(0.85, 1.02, 1.32), spec2));
-    
-    float rim = pow(1.0 - ndv, 2.0);
-    float rimSharp = pow(1.0 - ndv, 4.6);
-    col = op_add(col, op_mul(vec3(0.88, 1.15, 1.55), rim * 0.98));
-    col = op_add(col, op_mul(vec3(1.65, 1.72, 1.88), rimSharp * 1.15));
-    return op_mul(col, mix(0.36, 1.0, ao));
-}
-
- bool op_march(vec3 ro, vec3 rd, float sgn, out float outT) {
-    float t = 0.004;
-    for (int i = 0; i < 80; i++) {
-        float h = sgn * op_sceneSDF(op_add(ro, op_mul(rd, t)));
-        if (h < 0.0010) { outT = t; return true; }
-        t += max(h, 0.0025);
-        if (t > 3.5) break;
-    }
-    return false;
-}
-
- vec3 op_shadeCrystal(vec3 p, vec3 n, vec3 rd) {
-    float ao = op_sceneAO(p, n);
-    float ndv = clamp01(dot(n, op_mul(rd, -1.0)));
-    float fres = pow(1.0 - ndv, 2.2);
-    vec3 refl = normalize(op_sub(rd, op_mul(n, 2.0 * dot(n, rd))));
-    float eta = 1.0 / clamp(uFlowAmp, 1.2, 1.9);
-    float cosi = max(-dot(n, rd), 0.0);
-    float k = 1.0 - eta * eta * (1.0 - cosi * cosi);
-    vec3 rdir = k > 0.0
-        ? normalize(op_sub(op_mul(rd, eta), op_mul(n, sqrt(k) - eta * cosi)))
-        : refl;
-    float t2 = 0.0;
-    vec3 col = vec3(0, 0, 0);
-    if (op_march(op_sub(p, op_mul(n, 0.008)), rdir, -1.0, t2)) {
-        vec3 p2 = op_add(op_sub(p, op_mul(n, 0.008)), op_mul(rdir, t2));
-        vec3 n2 = op_mul(op_sceneNormal(p2), -1.0);
-        float cosi2 = max(-dot(n2, rdir), 0.0);
-        float ior = clamp(uFlowAmp, 1.2, 1.9);
-        float k2 = 1.0 - ior * ior * (1.0 - cosi2 * cosi2);
-        vec3 irefl = normalize(op_sub(rdir, op_mul(n2, 2.0 * dot(n2, rdir))));
-        vec3 outDir = k2 > 0.0
-            ? normalize(op_sub(op_mul(rdir, ior), op_mul(n2, sqrt(k2) - ior * cosi2)))
-            : irefl;
-        float fres2 = k2 > 0.0 ? pow(1.0 - cosi2, 1.8) : 0.95;
-        
-        float lensCenterDark = pow(1.0 - cosi2, 2.2);
-        vec3 behind = op_mul(op_envColor(outDir), 0.04 + 1.25 * lensCenterDark);
-        float t3 = 0.0;
-        
-        if (op_march(op_add(p2, op_mul(outDir, 0.014)), outDir, 1.0, t3)) {
-            vec3 p3 = op_add(p2, op_mul(outDir, t3 + 0.014));
-            vec3 n3 = op_sceneNormal(p3);
-            behind = op_mul(op_shadeMetal(p3, n3, outDir), 0.85);
-        }
-        
-        float tBounce = 0.0;
-        vec3 bounceCol = op_envColor(irefl);
-        if (op_march(op_add(p2, op_mul(irefl, 0.008)), irefl, -1.0, tBounce)) {
-            vec3 pB = op_add(p2, op_mul(irefl, tBounce + 0.008));
-            vec3 nB = op_mul(op_sceneNormal(pB), -1.0);
-            vec3 irefl2 = normalize(op_sub(irefl, op_mul(nB, 2.0 * dot(nB, irefl))));
-            bounceCol = op_add(op_mul(bounceCol, 0.45), op_mul(op_envColor(irefl2), 0.85));
-        }
-        
-        vec3 absorb = vec3(exp(-t2 * 1.55) * 0.72, exp(-t2 * 0.88) * 0.90, exp(-t2 * 0.25) * 1.08);
-        vec3 trans = vec3(behind.x * absorb.x, behind.y * absorb.y, behind.z * absorb.z);
-        vec3 inner = op_mul(bounceCol, (0.06 + 0.88 * fres2) * ao);
-        col = op_add(op_mul(trans, 0.85), inner);
-        
-        float caustic = pow(clamp01(dot(rdir, normalize(vec3(0.28, -0.52, -0.81)))), 6.0) * smoothstep(0.02, 0.16, t2);
-        float spindleGlow = exp(-38.0 * p.x * p.x) * exp(-5.5 * p.y * p.y) * smoothstep(0.06, 0.28, t2);
-        col = op_add(col, op_mul(vec3(0.58, 0.85, 1.25), (caustic * 0.72 + spindleGlow * 0.42)));
-    } else {
-        col = op_mul(op_envColor(rdir), 0.30);
-    }
-    
-    float bevel = clamp01(length(op_sub(op_sceneNormal(op_add(p, vec3(0.005, 0.005, 0))),
-                                   op_sceneNormal(op_sub(p, vec3(0.005, 0.005, 0))))) * 1.25);
-    vec3 surfRefl = op_mul(op_envColor(refl), (0.04 + 0.86 * fres) * mix(0.55, 1.0, ao));
-    col = op_add(op_mul(col, 0.82), surfRefl);
-    col = op_add(col, op_mul(vec3(0.95, 1.15, 1.45), pow(bevel, 1.35) * 0.72 * ao));
-    vec3 key1 = normalize(vec3(-0.30, 0.72, 0.62));
-    vec3 key2 = normalize(vec3( 0.45,-0.45, 0.77));
-    vec3 v = op_mul(rd, -1.0);
-    float spec1 = pow(clamp01(dot(n, normalize(op_add(key1, v)))), 160.0);
-    float spec2 = pow(clamp01(dot(n, normalize(op_add(key2, v)))), 80.0);
-    col = op_add(col, op_mul(vec3(1.85, 2.00, 2.25), spec1));
-    col = op_add(col, op_mul(vec3(0.95, 1.25, 1.65), spec2 * 0.75));
-    return col;
-}
-
- vec3 op_shadeNativeCrystal(vec3 p, vec3 n, vec3 rd) {
-    float ao = op_sceneAO(p, n);
-    float ndv = clamp01(dot(n, op_mul(rd, -1.0)));
-    float fres = pow(1.0 - ndv, 2.2);
-    vec3 refl = normalize(op_sub(rd, op_mul(n, 2.0 * dot(n, rd))));
-    float eta = 1.0 / clamp(uFlowAmp, 1.2, 1.9);
-    float cosi = max(-dot(n, rd), 0.0);
-    float k = 1.0 - eta * eta * (1.0 - cosi * cosi);
-    vec3 curP = p;
-    vec3 curD = k > 0.0
-        ? normalize(op_sub(op_mul(rd, eta), op_mul(n, sqrt(k) - eta * cosi)))
-        : refl;
-    vec3 curN = n;
-    float sgn = -1.0;
-    vec3 accum = vec3(0, 0, 0);
-    float throughput = 1.0;
-    float glassDist = 0.0;
-
-    
-    for (int hop = 0; hop < 6; hop++) {
-        float tHit = 0.0;
-        vec3 startP = op_add(curP, op_mul(curN, sgn * 0.006));
-        if (!op_march(startP, curD, sgn, tHit)) {
-            accum = op_add(accum, op_mul(op_envColor(curD), throughput * 0.55));
-            break;
-        }
-        if (sgn < 0.0) glassDist += tHit;
-        vec3 hitP = op_add(startP, op_mul(curD, tHit));
-        vec3 geoN = op_sceneNormal(hitP);
-        vec3 faceN = op_mul(geoN, sgn);
-        float cFace = max(-dot(faceN, curD), 0.0);
-        float f = pow(1.0 - cFace, 2.0);
-        vec3 rfl = normalize(op_sub(curD, op_mul(faceN, 2.0 * dot(faceN, curD))));
-        
-        float bvl = clamp01(length(op_sub(op_sceneNormal(op_add(hitP, vec3(0.004, 0.004, 0))),
-                                     op_sceneNormal(op_sub(hitP, vec3(0.004, 0.004, 0))))) * 1.25);
-        vec3 edgeGlint = op_mul(vec3(0.88, 1.04, 1.28), pow(bvl, 1.35) * 0.72);
-        
-        vec3 rp = op_nativeRot(hitP);
-        float isCore = smoothstep(0.165, 0.125, maxc(abs(rp)));
-        vec3 coreSpec = op_mul(op_shadeMetal(hitP, geoN, curD), 0.55 * isCore);
-        vec3 coreLight = op_add(coreSpec, op_mul(vec3(0.65, 0.96, 1.42), isCore * 0.75));
-        vec3 wallLight = op_add(op_add(op_mul(op_envColor(rfl), 0.14 + 0.58 * f), edgeGlint), coreLight);
-        accum = op_add(accum, op_mul(wallLight, throughput * 0.52));
-
-        float ratio = (sgn < 0.0) ? clamp(uFlowAmp, 1.2, 1.9) : (1.0 / clamp(uFlowAmp, 1.2, 1.9));
-        float kRef = 1.0 - ratio * ratio * (1.0 - cFace * cFace);
-        if (kRef > 0.0) {
-            curD = normalize(op_sub(op_mul(curD, ratio), op_mul(faceN, sqrt(kRef) - ratio * cFace)));
-            sgn = -sgn;
-        } else {
-            curD = rfl;
-        }
-        curP = hitP;
-        curN = geoN;
-        throughput *= 0.80;
-    }
-    
-    vec3 absorb = vec3(exp(-glassDist * 0.85) * 0.86, exp(-glassDist * 0.46) * 0.95, exp(-glassDist * 0.14) * 1.06);
-    vec3 col = vec3(accum.x * absorb.x, accum.y * absorb.y, accum.z * absorb.z);
-    float bevel = clamp01(length(op_sub(op_sceneNormal(op_add(p, vec3(0.005, 0.005, 0))),
-                                   op_sceneNormal(op_sub(p, vec3(0.005, 0.005, 0))))) * 1.25);
-    float topPlaneDamp = 1.0 - 0.38 * clamp01(n.y);
-    vec3 surfRefl = op_mul(op_envColor(refl), (0.03 + 0.55 * fres) * mix(0.60, 1.0, ao) * topPlaneDamp);
-    col = op_add(op_mul(col, 0.88), surfRefl);
-    col = op_add(col, op_mul(vec3(0.92, 1.12, 1.42), pow(bevel, 1.35) * 0.72 * ao));
-    vec3 key1 = normalize(vec3(-0.30, 0.72, 0.62));
-    vec3 v = op_mul(rd, -1.0);
-    float spec1 = pow(clamp01(dot(n, normalize(op_add(key1, v)))), 220.0);
-    col = op_add(col, op_mul(vec3(1.15, 1.28, 1.48), spec1));
-    return col;
-}
-
-
-        vec3 renderObject(int id, vec2 q) {
-          gMode = id;
-          float yaw = uPointer.x * 0.48;
-          float pitch = uPointer.y * 0.28;
-          float dist = (id == 1) ? 2.30 : 2.15;
-          vec3 ro = vec3(sin(yaw) * cos(pitch), sin(pitch), cos(yaw) * cos(pitch)) * dist;
-          vec3 ww = normalize(-ro);
-          vec3 uu = normalize(cross(vec3(0.0, 1.0, 0.0), ww));
-          vec3 vv = cross(ww, uu);
-          vec3 rd = normalize(ww * 2.5 + uu * q.x + vv * q.y);
-          float t = 1.0;
-          for (int i = 0; i < 110; i++) {
-            vec3 pos = ro + rd * t;
-            float h = op_sceneSDF(pos);
-            if (h < 0.0007) {
-              vec3 n = op_sceneNormal(pos);
-              float mSlider = clamp01(uMetalAmp);
-              if (id == 3) {
-                vec3 cc = op_shadeNativeCrystal(pos, n, rd);
-                vec3 cm = (mSlider > 0.08) ? op_shadeMetal(pos, n, rd) : vec3(0.0);
-                vec3 col = mix(cc, cm, max(0.0, mSlider - 0.04));
-                return col / (1.0 + col * 0.36);
-              }
-              if (id == 1) {
-                float spatialCrys = op_maxwellCrystalFactor(pos);
-                float crys = clamp01(mix(1.0 - mSlider, spatialCrys, 0.72));
-                vec3 cm = op_shadeMetal(pos, n, rd);
-                vec3 cc = op_shadeCrystal(pos, n, rd);
-                float isSpindle = exp(-55.0 * pos.x * pos.x) * smoothstep(0.64, 0.08, abs(pos.y));
-                float vertStreak = pow(clamp01(1.0 - abs(n.x * 1.6 + 0.42)), 28.0) * isSpindle;
-                vec3 streakCol = vec3(1.45, 1.60, 1.85) * (vertStreak * 0.65);
-                vec3 col = cm * (1.0 - 0.85 * crys) + cc * (0.12 + 0.88 * crys) + streakCol;
-                return col / (1.0 + col * 0.42);
-              }
-              float metal = (uConcept == 0) ? 0.96 : mSlider;
-              vec3 cm = op_shadeMetal(pos, n, rd);
-              vec3 cc = (metal < 0.96) ? op_shadeCrystal(pos, n, rd) : vec3(0.0);
-              vec3 col = mix(cc, cm, metal);
-              return col / (1.0 + col * 0.38);
-            }
-            t += h;
-            if (t > 4.2) break;
-          }
-          return vec3(0.0);
-        }
-
-        void main() {
-          if (uConcept == 0) {
-            float x = vUv.x;
-            int id = x < 0.3333 ? 1 : (x < 0.6666 ? 2 : 3);
-            float local = fract(x * 3.0);
-            vec2 q = vec2((local - 0.5) * 2.0, (vUv.y - 0.5) * 2.0);
-            fragColor = vec4(renderObject(id, q), 1.0);
-            return;
-          }
-          vec2 q = (vUv - 0.5) * 2.0;
-          fragColor = vec4(renderObject(uConcept, q), 1.0);
-        }
-      `;
-
-      const progSynthAng = createProgram(vsFbo, fsSynthAng);
-      const progSynthRad = createProgram(vsFbo, fsSynthRad);
-      const progShock    = createProgram(vsFbo, fsShock);
-      const progNorm     = createProgram(vsFbo, fsNorm);
-      const progRender   = createProgram(vsScreen, fsRender);
-
-      const quadBuf = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf);
-      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-        -1, -1,  1, -1, -1,  1,
-        -1,  1,  1, -1,  1,  1
-      ]), gl.STATIC_DRAW);
-
-      function bindQuad(prog) {
-        gl.useProgram(prog);
-        gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf);
-        const loc = gl.getAttribLocation(prog, 'aPosition');
-        gl.enableVertexAttribArray(loc);
-        gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-      }
-
-      // Decode mathematical spectral harmonic coefficients (Float32) into RGBA32F GPU texture
-      function createSpectralHarmonicTexture() {
-        const rawBytes = Uint8Array.from(atob(ORB_SPEC_F32_B64), c => c.charCodeAt(0));
-        const rgbF32 = new Float32Array(rawBytes.buffer);
-        const numTexels = ORB_SPEC_K * (2 * ORB_SPEC_M + 1); // 60 * 121
-        const rgbaF32 = new Float32Array(numTexels * 4);
-        for (let i = 0; i < numTexels; ++i) {
-          rgbaF32[4 * i]     = rgbF32[3 * i];
-          rgbaF32[4 * i + 1] = rgbF32[3 * i + 1];
-          rgbaF32[4 * i + 2] = rgbF32[3 * i + 2];
-          rgbaF32[4 * i + 3] = 1.0;
-        }
-        const tex = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, tex);
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, 2 * ORB_SPEC_M + 1, ORB_SPEC_K, 0, gl.RGBA, gl.FLOAT, rgbaF32);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        return tex;
-      }
-
-      function createFBO(w, h, wrapS = gl.CLAMP_TO_EDGE) {
-        const tex = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, tex);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, w, h, 0, gl.RGBA, gl.HALF_FLOAT, null);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
-        const fbo = gl.createFramebuffer();
-        gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
-        return { fbo, tex, w, h };
-      }
-
-      // Execute GPU Spectral Synthesis & Shock-Wave Super-Resolution Pipeline on Startup
-      const texSpec = createSpectralHarmonicTexture();
-      const fboAng   = createFBO(1024, 60, gl.REPEAT);
-      const fboCore0 = createFBO(2048, 2048);
-      const fboCore1 = createFBO(2048, 2048);
-      const fboNorm  = createFBO(2048, 2048);
-
-      // 1A: Angular Harmonics (1024 x 60)
-      gl.bindFramebuffer(gl.FRAMEBUFFER, fboAng.fbo);
-      gl.viewport(0, 0, fboAng.w, fboAng.h);
-      bindQuad(progSynthAng);
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, texSpec);
-      gl.uniform1i(gl.getUniformLocation(progSynthAng, 'uSpecTex'), 0);
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-      // 1B: Radial Cosine Synthesis (2048 x 2048)
-      gl.bindFramebuffer(gl.FRAMEBUFFER, fboCore0.fbo);
-      gl.viewport(0, 0, fboCore0.w, fboCore0.h);
-      bindQuad(progSynthRad);
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, fboAng.tex);
-      gl.uniform1i(gl.getUniformLocation(progSynthRad, 'uAngTex'), 0);
-      gl.activeTexture(gl.TEXTURE1);
-      gl.bindTexture(gl.TEXTURE_2D, texSpec);
-      gl.uniform1i(gl.getUniformLocation(progSynthRad, 'uSpecTex'), 1);
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-      // 2: Smooth Osher-Rudin Shock-Wave Ridge Steepening (2048 x 2048)
-      bindQuad(progShock);
-      gl.uniform1i(gl.getUniformLocation(progShock, 'uInTex'), 0);
-      gl.bindFramebuffer(gl.FRAMEBUFFER, fboCore1.fbo);
-      gl.viewport(0, 0, fboCore1.w, fboCore1.h);
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, fboCore0.tex);
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
-      const srcCore = fboCore1;
-
-      // 3: Analytical 32-Bit Surface Normals & Dispersion Mask (2048 x 2048)
-      gl.bindFramebuffer(gl.FRAMEBUFFER, fboNorm.fbo);
-      gl.viewport(0, 0, fboNorm.w, fboNorm.h);
-      bindQuad(progNorm);
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, srcCore.tex);
-      gl.uniform1i(gl.getUniformLocation(progNorm, 'uCoreTex'), 0);
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-      const uniforms = {
-        uConcept: gl.getUniformLocation(progRender, 'uConcept'),
-        uPalette: gl.getUniformLocation(progRender, 'uPalette'),
-        uCoreTex: gl.getUniformLocation(progRender, 'uCoreTex'),
-        uNormTex: gl.getUniformLocation(progRender, 'uNormTex'),
-        uTime: gl.getUniformLocation(progRender, 'uTime'),
-        uFlowAmp: gl.getUniformLocation(progRender, 'uFlowAmp'),
-        uMetalAmp: gl.getUniformLocation(progRender, 'uMetalAmp'),
-        uRelightAmp: gl.getUniformLocation(progRender, 'uRelightAmp'),
-        uIridAmp: gl.getUniformLocation(progRender, 'uIridAmp'),
-        uHaloAmp: gl.getUniformLocation(progRender, 'uHaloAmp'),
-        uPointer: gl.getUniformLocation(progRender, 'uPointer'),
-        uOrbCenter: gl.getUniformLocation(progRender, 'uOrbCenter'),
-        uOrbRadius: gl.getUniformLocation(progRender, 'uOrbRadius'),
-        uBezelL: gl.getUniformLocation(progRender, 'uBezelL'),
-        uBezelCR: gl.getUniformLocation(progRender, 'uBezelCR'),
-        uBezelCB: gl.getUniformLocation(progRender, 'uBezelCB'),
-        uHaloR: gl.getUniformLocation(progRender, 'uHaloR'),
-        uHaloG: gl.getUniformLocation(progRender, 'uHaloG'),
-        uHaloB: gl.getUniformLocation(progRender, 'uHaloB')
-      };
-
-      const bezelLFlat  = new Float32Array(ORB_BEZEL_L.flat());
-      const bezelCRFlat = new Float32Array(ORB_BEZEL_CR.flat());
-      const bezelCBFlat = new Float32Array(ORB_BEZEL_CB.flat());
-      const haloRFlat   = new Float32Array(ORB_HALO_R.flat());
-      const haloGFlat   = new Float32Array(ORB_HALO_G.flat());
-      const haloBFlat   = new Float32Array(ORB_HALO_B.flat());
-
-      function drawShaderFrame() {
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.viewport(0, 0, canvasShader.width, canvasShader.height);
-        bindQuad(progRender);
-
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, srcCore.tex);
-        gl.uniform1i(uniforms.uCoreTex, 0);
-
-        gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, fboNorm.tex);
-        gl.uniform1i(uniforms.uNormTex, 1);
-
-        gl.uniform1i(uniforms.uConcept, state.concept);
-        gl.uniform1i(uniforms.uPalette, state.palette);
-        gl.uniform1f(uniforms.uTime, state.time);
-        gl.uniform1f(uniforms.uFlowAmp, state.flowAmp);
-        gl.uniform1f(uniforms.uMetalAmp, state.metalAmp);
-        gl.uniform1f(uniforms.uRelightAmp, state.relightAmp);
-        gl.uniform1f(uniforms.uIridAmp, state.iridAmp);
-        gl.uniform1f(uniforms.uHaloAmp, state.haloAmp);
-        gl.uniform2f(uniforms.uPointer, state.pointerX, state.pointerY);
-
-        gl.uniform2f(uniforms.uOrbCenter, 0.5, 0.5);
-        gl.uniform2f(uniforms.uOrbRadius, 0.42, 0.42);
-
-        gl.uniform4fv(uniforms.uBezelL, bezelLFlat);
-        gl.uniform4fv(uniforms.uBezelCR, bezelCRFlat);
-        gl.uniform4fv(uniforms.uBezelCB, bezelCBFlat);
-        gl.uniform2fv(uniforms.uHaloR, haloRFlat);
-        gl.uniform2fv(uniforms.uHaloG, haloGFlat);
-        gl.uniform2fv(uniforms.uHaloB, haloBFlat);
-
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
-      }
-
-      canvasShader.addEventListener('pointermove', e => {
-        const rect = canvasShader.getBoundingClientRect();
-        state.targetPointerX = ((e.clientX - rect.left) / rect.width) * 2.0 - 1.0;
-        state.targetPointerY = ((e.clientY - rect.top) / rect.height) * 2.0 - 1.0;
-      });
-      canvasShader.addEventListener('pointerleave', () => {
-        state.targetPointerX = 0.0;
-        state.targetPointerY = 0.0;
-      });
-
-      let lastTs = performance.now();
-      const timeReadout = document.getElementById('time-readout');
-
-      function renderFrame(now) {
-        const dt = Math.min(0.05, (now - lastTs) * 0.001);
-        lastTs = now;
-
-        if (!state.paused) state.time += dt * state.speed;
-        state.pointerX += (state.targetPointerX - state.pointerX) * 0.08;
-        state.pointerY += (state.targetPointerY - state.pointerY) * 0.08;
-        drawShaderFrame();
-        requestAnimationFrame(renderFrame);
-      }
-
-      drawShaderFrame();
-      requestAnimationFrame(renderFrame);
-    })();
-  
-</script>
-<script>
-  const opts = document.getElementById('concept-opts');
-  const blurb = document.getElementById('blurb');
-  const projRow = document.getElementById('proj-row');
-  function selectConcept(id) {
-    state.concept = id;
-    if (id in PRESET_METAL) {
-      state.metalAmp = PRESET_METAL[id];
-      const mEl = document.getElementById('ctrl-metal');
-      mEl.value = state.metalAmp;
-      document.getElementById('val-metal').textContent = state.metalAmp.toFixed(2);
-    }
-    for (const x of projRow.children) x.classList.toggle('active', +x.dataset.proj === id);
-    renderOpts();
-  }
-  function renderOpts() {
-    opts.innerHTML = '';
-    for (const [id, name, desc] of CONCEPTS) {
-      const b = document.createElement('button');
-      b.innerHTML = name + '<small>' + desc + '</small>';
-      if (id === state.concept) b.classList.add('active');
-      b.onclick = () => selectConcept(id);
-      opts.appendChild(b);
-    }
-    const cur = CONCEPTS.find(c => c[0] === state.concept);
-    blurb.textContent = cur ? cur[2] : '';
-  }
-  projRow.onclick = e => {
-    const b = e.target.closest('button'); if (!b) return;
-    selectConcept(+b.dataset.proj);
-  };
-  function bind(id, key, out) {
-    const el = document.getElementById(id);
-    el.oninput = () => { state[key] = parseFloat(el.value); document.getElementById(out).textContent = state[key].toFixed(2); };
-  }
-  bind('ctrl-flow', 'flowAmp', 'val-flow');
-  bind('ctrl-metal', 'metalAmp', 'val-metal');
-  bind('ctrl-irid', 'iridAmp', 'val-irid');
-  document.getElementById('btn-pause').onclick = () => { state.paused = !state.paused; };
-  document.getElementById('btn-png').onclick = () => {
-    const c = document.getElementById('canvas-shader');
-    const a = document.createElement('a');
-    a.href = c.toDataURL('image/png');
-    a.download = 'logo_' + (state.concept || 'triptych') + '.png';
-    a.click();
-  };
-  selectConcept(1);
-</script>
+      <div class="meta">
+        <span class="title">1 · Maxwell</span>
+        <a class="dl" href="maxwell.svg" download="maxwell.svg">Télécharger SVG</a>
+      </div>
+      <div class="desc">Porte biconvexe centrale (le démon de Maxwell) qui filtre les conjectures à gauche vers les trajectoires certifiées à droite.</div>
+    </section>
+    <section class="card">
+      <div class="art"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" fill="none">
+  <rect width="512" height="512" fill="#000000"/>
+  <defs>
+    <linearGradient id="tb-blade" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F8FAFC" stop-opacity="0.95"/>
+      <stop offset="55%" stop-color="#94A3B8" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0.15"/>
+    </linearGradient>
+    <linearGradient id="tb-ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F8FAFC"/>
+      <stop offset="50%" stop-color="#64748B"/>
+      <stop offset="100%" stop-color="#BAE6FD"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Outer double containment ring -->
+  <circle cx="256" cy="256" r="196" stroke="url(#tb-ring)" stroke-width="8"/>
+  <circle cx="256" cy="256" r="180" stroke="#475569" stroke-width="2.5"/>
+
+  <!-- 6 swept crescent turbine blades -->
+  <g>
+    <g transform="rotate(0 256 256)">
+      <path d="M 256 196 C 292 172, 338 124, 326 84 C 368 112, 396 168, 368 220 C 338 202, 294 198, 256 196 Z"
+            fill="url(#tb-blade)" stroke="#F8FAFC" stroke-width="4.5" stroke-linejoin="round"/>
+    </g>
+    <g transform="rotate(60 256 256)">
+      <path d="M 256 196 C 292 172, 338 124, 326 84 C 368 112, 396 168, 368 220 C 338 202, 294 198, 256 196 Z"
+            fill="url(#tb-blade)" stroke="#F8FAFC" stroke-width="4.5" stroke-linejoin="round"/>
+    </g>
+    <g transform="rotate(120 256 256)">
+      <path d="M 256 196 C 292 172, 338 124, 326 84 C 368 112, 396 168, 368 220 C 338 202, 294 198, 256 196 Z"
+            fill="url(#tb-blade)" stroke="#F8FAFC" stroke-width="4.5" stroke-linejoin="round"/>
+    </g>
+    <g transform="rotate(180 256 256)">
+      <path d="M 256 196 C 292 172, 338 124, 326 84 C 368 112, 396 168, 368 220 C 338 202, 294 198, 256 196 Z"
+            fill="url(#tb-blade)" stroke="#F8FAFC" stroke-width="4.5" stroke-linejoin="round"/>
+    </g>
+    <g transform="rotate(240 256 256)">
+      <path d="M 256 196 C 292 172, 338 124, 326 84 C 368 112, 396 168, 368 220 C 338 202, 294 198, 256 196 Z"
+            fill="url(#tb-blade)" stroke="#F8FAFC" stroke-width="4.5" stroke-linejoin="round"/>
+    </g>
+    <g transform="rotate(300 256 256)">
+      <path d="M 256 196 C 292 172, 338 124, 326 84 C 368 112, 396 168, 368 220 C 338 202, 294 198, 256 196 Z"
+            fill="url(#tb-blade)" stroke="#F8FAFC" stroke-width="4.5" stroke-linejoin="round"/>
+    </g>
+  </g>
+
+  <!-- Central hub -->
+  <circle cx="256" cy="256" r="46" fill="#000000" stroke="#F8FAFC" stroke-width="7"/>
+  <circle cx="256" cy="256" r="16" fill="#7DD3FC"/>
+</svg>
+</div>
+      <div class="meta">
+        <span class="title">2 · turbo-lean</span>
+        <a class="dl" href="turbo-lean.svg" download="turbo-lean.svg">Télécharger SVG</a>
+      </div>
+      <div class="desc">Turbine géométrique à 6 pales en croissant dans un double anneau de confinement.</div>
+    </section>
+    <section class="card">
+      <div class="art"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" fill="none">
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- Back corner sub-cubes -->
+  <polygon points="256.0,161.9 337.5,209.0 256.0,256.0 174.5,209.0" fill="#1E293B" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+  <polygon points="174.5,209.0 256.0,256.0 256.0,350.1 174.5,303.0" fill="#0F172A" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+  <polygon points="256.0,256.0 337.5,209.0 337.5,303.0 256.0,350.1" fill="#090D16" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+<polygon points="143.5,226.9 225.0,273.9 143.5,321.0 62.0,273.9" fill="#1E293B" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+  <polygon points="62.0,273.9 143.5,321.0 143.5,415.0 62.0,368.0" fill="#0F172A" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+  <polygon points="143.5,321.0 225.0,273.9 225.0,368.0 143.5,415.0" fill="#090D16" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+<polygon points="256.0,32.0 337.5,79.0 256.0,126.1 174.5,79.0" fill="#1E293B" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+  <polygon points="174.5,79.0 256.0,126.1 256.0,220.2 174.5,173.1" fill="#0F172A" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+  <polygon points="256.0,126.1 337.5,79.0 337.5,173.1 256.0,220.2" fill="#090D16" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+<polygon points="368.5,226.9 450.0,273.9 368.5,321.0 287.0,273.9" fill="#1E293B" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+  <polygon points="287.0,273.9 368.5,321.0 368.5,415.0 287.0,368.0" fill="#0F172A" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+  <polygon points="368.5,321.0 450.0,273.9 450.0,368.0 368.5,415.0" fill="#090D16" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+  <!-- Central suspended core cube -->
+  <polygon points="256.0,184.3 318.1,220.2 256.0,256.0 193.9,220.2" fill="#F8FAFC" fill-opacity="0.96" stroke="#FFFFFF" stroke-width="4.0" stroke-linejoin="round"/>
+  <polygon points="193.9,220.2 256.0,256.0 256.0,327.7 193.9,291.8" fill="#BAE6FD" fill-opacity="0.96" stroke="#FFFFFF" stroke-width="4.0" stroke-linejoin="round"/>
+  <polygon points="256.0,256.0 318.1,220.2 318.1,291.8 256.0,327.7" fill="#38BDF8" fill-opacity="0.96" stroke="#FFFFFF" stroke-width="4.0" stroke-linejoin="round"/>
+  <!-- Front corner sub-cubes (with translucent front-most block revealing the core) -->
+  <polygon points="143.5,97.0 225.0,144.0 143.5,191.0 62.0,144.0" fill="#334155" fill-opacity="0.88" stroke="#CBD5E1" stroke-width="3.5" stroke-linejoin="round"/>
+  <polygon points="62.0,144.0 143.5,191.0 143.5,285.1 62.0,238.1" fill="#1E293B" fill-opacity="0.88" stroke="#CBD5E1" stroke-width="3.5" stroke-linejoin="round"/>
+  <polygon points="143.5,191.0 225.0,144.0 225.0,238.1 143.5,285.1" fill="#0F172A" fill-opacity="0.88" stroke="#CBD5E1" stroke-width="3.5" stroke-linejoin="round"/>
+<polygon points="256.0,291.8 337.5,338.9 256.0,385.9 174.5,338.9" fill="#334155" fill-opacity="0.88" stroke="#CBD5E1" stroke-width="3.5" stroke-linejoin="round"/>
+  <polygon points="174.5,338.9 256.0,385.9 256.0,480.0 174.5,433.0" fill="#1E293B" fill-opacity="0.88" stroke="#CBD5E1" stroke-width="3.5" stroke-linejoin="round"/>
+  <polygon points="256.0,385.9 337.5,338.9 337.5,433.0 256.0,480.0" fill="#0F172A" fill-opacity="0.88" stroke="#CBD5E1" stroke-width="3.5" stroke-linejoin="round"/>
+<polygon points="368.5,97.0 450.0,144.0 368.5,191.0 287.0,144.0" fill="#334155" fill-opacity="0.88" stroke="#CBD5E1" stroke-width="3.5" stroke-linejoin="round"/>
+  <polygon points="287.0,144.0 368.5,191.0 368.5,285.1 287.0,238.1" fill="#1E293B" fill-opacity="0.88" stroke="#CBD5E1" stroke-width="3.5" stroke-linejoin="round"/>
+  <polygon points="368.5,191.0 450.0,144.0 450.0,238.1 368.5,285.1" fill="#0F172A" fill-opacity="0.88" stroke="#CBD5E1" stroke-width="3.5" stroke-linejoin="round"/>
+<polygon points="256.0,161.9 337.5,209.0 256.0,256.0 174.5,209.0" fill="#BAE6FD" fill-opacity="0.14" stroke="#E2E8F0" stroke-width="3.0" stroke-linejoin="round"/>
+  <polygon points="174.5,209.0 256.0,256.0 256.0,350.1 174.5,303.0" fill="#7DD3FC" fill-opacity="0.14" stroke="#E2E8F0" stroke-width="3.0" stroke-linejoin="round"/>
+  <polygon points="256.0,256.0 337.5,209.0 337.5,303.0 256.0,350.1" fill="#38BDF8" fill-opacity="0.14" stroke="#E2E8F0" stroke-width="3.0" stroke-linejoin="round"/>
+</svg>
+</div>
+      <div class="meta">
+        <span class="title">3 · lean-native</span>
+        <a class="dl" href="lean-native.svg" download="lean-native.svg">Télécharger SVG</a>
+      </div>
+      <div class="desc">Matrice isométrique de 8 sous-cubes laissant apparaître le cube noyau suspendu au centre.</div>
+    </section>
+  </main>
 </body>
 </html>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" fill="none">
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- Back corner sub-cubes -->
+  <polygon points="256.0,161.9 337.5,209.0 256.0,256.0 174.5,209.0" fill="#1E293B" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+  <polygon points="174.5,209.0 256.0,256.0 256.0,350.1 174.5,303.0" fill="#0F172A" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+  <polygon points="256.0,256.0 337.5,209.0 337.5,303.0 256.0,350.1" fill="#090D16" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+<polygon points="143.5,226.9 225.0,273.9 143.5,321.0 62.0,273.9" fill="#1E293B" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+  <polygon points="62.0,273.9 143.5,321.0 143.5,415.0 62.0,368.0" fill="#0F172A" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+  <polygon points="143.5,321.0 225.0,273.9 225.0,368.0 143.5,415.0" fill="#090D16" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+<polygon points="256.0,32.0 337.5,79.0 256.0,126.1 174.5,79.0" fill="#1E293B" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+  <polygon points="174.5,79.0 256.0,126.1 256.0,220.2 174.5,173.1" fill="#0F172A" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+  <polygon points="256.0,126.1 337.5,79.0 337.5,173.1 256.0,220.2" fill="#090D16" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+<polygon points="368.5,226.9 450.0,273.9 368.5,321.0 287.0,273.9" fill="#1E293B" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+  <polygon points="287.0,273.9 368.5,321.0 368.5,415.0 287.0,368.0" fill="#0F172A" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+  <polygon points="368.5,321.0 450.0,273.9 450.0,368.0 368.5,415.0" fill="#090D16" fill-opacity="0.92" stroke="#64748B" stroke-width="3.0" stroke-linejoin="round"/>
+  <!-- Central suspended core cube -->
+  <polygon points="256.0,184.3 318.1,220.2 256.0,256.0 193.9,220.2" fill="#F8FAFC" fill-opacity="0.96" stroke="#FFFFFF" stroke-width="4.0" stroke-linejoin="round"/>
+  <polygon points="193.9,220.2 256.0,256.0 256.0,327.7 193.9,291.8" fill="#BAE6FD" fill-opacity="0.96" stroke="#FFFFFF" stroke-width="4.0" stroke-linejoin="round"/>
+  <polygon points="256.0,256.0 318.1,220.2 318.1,291.8 256.0,327.7" fill="#38BDF8" fill-opacity="0.96" stroke="#FFFFFF" stroke-width="4.0" stroke-linejoin="round"/>
+  <!-- Front corner sub-cubes (with translucent front-most block revealing the core) -->
+  <polygon points="143.5,97.0 225.0,144.0 143.5,191.0 62.0,144.0" fill="#334155" fill-opacity="0.88" stroke="#CBD5E1" stroke-width="3.5" stroke-linejoin="round"/>
+  <polygon points="62.0,144.0 143.5,191.0 143.5,285.1 62.0,238.1" fill="#1E293B" fill-opacity="0.88" stroke="#CBD5E1" stroke-width="3.5" stroke-linejoin="round"/>
+  <polygon points="143.5,191.0 225.0,144.0 225.0,238.1 143.5,285.1" fill="#0F172A" fill-opacity="0.88" stroke="#CBD5E1" stroke-width="3.5" stroke-linejoin="round"/>
+<polygon points="256.0,291.8 337.5,338.9 256.0,385.9 174.5,338.9" fill="#334155" fill-opacity="0.88" stroke="#CBD5E1" stroke-width="3.5" stroke-linejoin="round"/>
+  <polygon points="174.5,338.9 256.0,385.9 256.0,480.0 174.5,433.0" fill="#1E293B" fill-opacity="0.88" stroke="#CBD5E1" stroke-width="3.5" stroke-linejoin="round"/>
+  <polygon points="256.0,385.9 337.5,338.9 337.5,433.0 256.0,480.0" fill="#0F172A" fill-opacity="0.88" stroke="#CBD5E1" stroke-width="3.5" stroke-linejoin="round"/>
+<polygon points="368.5,97.0 450.0,144.0 368.5,191.0 287.0,144.0" fill="#334155" fill-opacity="0.88" stroke="#CBD5E1" stroke-width="3.5" stroke-linejoin="round"/>
+  <polygon points="287.0,144.0 368.5,191.0 368.5,285.1 287.0,238.1" fill="#1E293B" fill-opacity="0.88" stroke="#CBD5E1" stroke-width="3.5" stroke-linejoin="round"/>
+  <polygon points="368.5,191.0 450.0,144.0 450.0,238.1 368.5,285.1" fill="#0F172A" fill-opacity="0.88" stroke="#CBD5E1" stroke-width="3.5" stroke-linejoin="round"/>
+<polygon points="256.0,161.9 337.5,209.0 256.0,256.0 174.5,209.0" fill="#BAE6FD" fill-opacity="0.14" stroke="#E2E8F0" stroke-width="3.0" stroke-linejoin="round"/>
+  <polygon points="174.5,209.0 256.0,256.0 256.0,350.1 174.5,303.0" fill="#7DD3FC" fill-opacity="0.14" stroke="#E2E8F0" stroke-width="3.0" stroke-linejoin="round"/>
+  <polygon points="256.0,256.0 337.5,209.0 337.5,303.0 256.0,350.1" fill="#38BDF8" fill-opacity="0.14" stroke="#E2E8F0" stroke-width="3.0" stroke-linejoin="round"/>
+</svg>

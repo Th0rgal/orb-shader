@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>turbo-lean / lean-native / lean-sys — logo gallery</title>
+<title>Maxwell / turbo-lean / lean-native — logo gallery</title>
 <style>
   :root { color-scheme: dark; }
   * { box-sizing: border-box; }
@@ -24,7 +24,7 @@
   .row { display: flex; gap: 8px; flex-wrap: wrap; }
   .row button, .ghost { background: transparent; color: #c5d0d8; border: 1px solid rgba(255,255,255,0.14); border-radius: 999px; padding: 7px 14px; cursor: pointer; font: 13px/1 ui-sans-serif, system-ui, sans-serif; }
   .row button.active { border-color: rgba(120, 200, 235, 0.8); color: #9fd8ee; }
-  label.slider { display: block; font: 12px/1 ui-sans-serif, system-ui, sans-serif; color: #8b98a2; margin: 12px 0 4px; }
+  label.slider { display: flex; justify-content: space-between; font: 12px/1 ui-sans-serif, system-ui, sans-serif; color: #8b98a2; margin: 12px 0 4px; }
   input[type=range] { width: 100%; accent-color: #79c6e6; }
   .note { font: 12.5px/1.45 ui-sans-serif, system-ui, sans-serif; color: #6e7c86; margin-top: 18px; }
   @media (max-width: 860px) { .stage { grid-template-columns: 1fr; } }
@@ -32,26 +32,27 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>Twelve ways to machine a <em>proof</em>.</h1>
-  <p class="lede">Real-time 3D raymarched sculptural objects for <strong>turbo-lean</strong>, <strong>lean-native</strong>, and <strong>lean-sys</strong>. Each mark is a solid 3D signed-distance artifact with chamfered CNC radii, cast soft shadows, 4-tap ambient occlusion, bead-blasted anodized micro-grain, and the 60-harmonic Osher–Rudin liquid-chrome sheen reflected across its 3D bevels. Move your cursor across the canvas to tilt and inspect each piece.</p>
+  <h1>Three artifacts in <em>liquid metal &amp; crystal</em>.</h1>
+  <p class="lede">Real-time 3D raymarched sculptures for <strong>Maxwell</strong>, <strong>turbo-lean</strong>, and <strong>lean-native</strong>. Slide continuously between heavy dark-core liquid mercury and multi-bounce refractive crystal glass with trichromatic RGB dispersion, total internal reflection, and thin-film cyan/magenta interference.</p>
   <div class="stage">
     <canvas id="canvas-shader" width="1024" height="1024"></canvas>
     <div class="panel">
-      <h2>Project</h2>
+      <h2>View</h2>
       <div class="row" id="proj-row">
-        <button data-proj="0" class="active">turbo-lean</button>
-        <button data-proj="1">lean-native</button>
-        <button data-proj="2">lean-sys</button>
+        <button data-proj="1" class="active">1 · Maxwell</button>
+        <button data-proj="2">2 · turbo-lean</button>
+        <button data-proj="3">3 · lean-native</button>
+        <button data-proj="0">All 3 (Triptych)</button>
       </div>
-      <h2>3D Object</h2>
+      <h2>Sculpture</h2>
       <div class="opts" id="concept-opts"></div>
-      <h2>Light</h2>
-      <label class="slider">sheen <span id="val-flow">1.10</span></label>
-      <input id="ctrl-flow" type="range" min="0" max="2.4" step="0.01" value="1.10">
-      <label class="slider">metal <span id="val-metal">1.15</span></label>
-      <input id="ctrl-metal" type="range" min="0" max="2" step="0.01" value="1.15">
-      <label class="slider">iridescence <span id="val-irid">1.30</span></label>
-      <input id="ctrl-irid" type="range" min="0" max="2.5" step="0.01" value="1.30">
+      <h2>Optics &amp; Material</h2>
+      <label class="slider"><span>crystal &harr; liquid metal</span><span id="val-metal">0.22</span></label>
+      <input id="ctrl-metal" type="range" min="0" max="1" step="0.01" value="0.22">
+      <label class="slider"><span>dispersion / IOR</span><span id="val-flow">1.35</span></label>
+      <input id="ctrl-flow" type="range" min="0.2" max="2.4" step="0.01" value="1.35">
+      <label class="slider"><span>thin-film iridescence</span><span id="val-irid">1.45</span></label>
+      <input id="ctrl-irid" type="range" min="0" max="2.5" step="0.01" value="1.45">
       <div class="row" style="margin-top:16px">
         <button id="btn-pause">pause</button>
         <button id="btn-png">save png</button>
@@ -62,27 +63,14 @@
 </div>
 <script src="orb_assets.js"></script>
 <script>
-  const CONCEPTS = {
-    0: [
-      [1, "Machined delta manifold", "Chamfered triangular billet with an inverted core cutout and six milled cooling flutes."],
-      [2, "Zygote 3-scoop rotor", "Heavy anodized disc with three swept hydrodynamic scoops and a central spindle bore."],
-      [3, "Slotted Reuleaux rotor", "Domed Reuleaux shield sliced by three radial expansion slots and a precision hub bore."],
-      [4, "Tri-lobe bearing housing", "Smoothly welded three-lobe mechanical housing with four precision cylindrical bores."]
-    ],
-    1: [
-      [5, "Orthogonal torus link", "Three heavy interlocking torus rings woven along orthogonal axes."],
-      [6, "Hexagram die-shield", "Domed hexagonal billet with a six-pointed star bore and six peripheral scallops."],
-      [7, "Tri-axial node block", "Filleted super-cube bored along all three axes with a suspended spherical core."],
-      [8, "Segmented delta prism", "Three heavy beveled triangular segments separated by uniform radial expansion gaps."]
-    ],
-    2: [
-      [9, "ShmRing spoked valve", "Concentric torus rings joined by three structural spokes with milled cursor gates."],
-      [10, "3-tier LSM hex pyramid", "Three stepped hexagonal tiers fused with smooth fillets around a deep central bore."],
-      [11, "Zero-copy IPC Hopf link", "Two perpendicular interlocked torus rings representing lock-free shared-memory IPC."],
-      [12, "Slotted reactor manifold", "Six-way radially slotted hexagonal manifold enclosing a suspended event-loop core."]
-    ]
-  };
-  const state = { concept: 1, palette: 0, flowAmp: 1.10, metalAmp: 1.15, relightAmp: 1.25, iridAmp: 1.30 };
+  const CONCEPTS = [
+    [1, "1 · Maxwell — The Maxwell Gate", "Biconvex vertical spindle gate with three converging left conjecture arcs and seven diverging right certification tendrils."],
+    [2, "2 · turbo-lean — 8-Blade Optical Impeller", "Central spherical core, grooved outer containment ring, and eight swept concavo-convex spiral blades."],
+    [3, "3 · lean-native — Isometric Crystal Lattice", "Eight rounded corner sub-cubes in exact isometric projection refracting a suspended central core cube."],
+    [0, "Triptych — All 3 Side-by-Side", "Panoramic 8:3 studio lineup of Maxwell, turbo-lean, and lean-native."]
+  ];
+  const PRESET_METAL = { 1: 0.52, 2: 0.18, 3: 0.10, 0: 0.22 };
+  const state = { concept: 1, palette: 0, flowAmp: 1.35, metalAmp: 0.52, relightAmp: 1.25, iridAmp: 1.45 };
 </script>
 <script>
 
@@ -114,10 +102,10 @@
       Object.assign(state, {
         paused: fixedTime !== null,
         time: fixedTime !== null ? fixedTime : 0.35,
-        flowAmp: ampOverride !== null ? ampOverride : 1.10,
-        metalAmp: 1.15,
+        flowAmp: ampOverride !== null ? ampOverride : 1.35,
+        metalAmp: 0.52,
         relightAmp: ampOverride !== null ? ampOverride : 1.25,
-        iridAmp: ampOverride !== null ? ampOverride : 1.30,
+        iridAmp: ampOverride !== null ? ampOverride : 1.45,
         haloAmp: 1.35,
         pointerX: 0.0,
         pointerY: 0.0,
@@ -311,7 +299,7 @@
         }
       `;
 
-      // Pass 4: Real-time 3D raymarched machined objects with liquid-chrome reflections
+      // Pass 4: Maxwell / turbo-lean / lean-native — liquid metal <-> crystal glass
       const fsRender = `#version 300 es
         precision highp float;
 
@@ -324,315 +312,283 @@
         uniform float uMetalAmp;
         uniform float uIridAmp;
         uniform vec2 uPointer;
-        uniform int uPalette;
         uniform int uConcept;
 
         const float PI = 3.14159265359;
 
         float smin3(float a, float b, float k) {
-          float h = max(k - abs(a - b), 0.0) / k;
+          float h = max(k - abs(a - b), 0.0) / max(k, 1e-4);
           return min(a, b) - h * h * h * k * (1.0 / 6.0);
         }
-        float smax3(float a, float b, float k) { return -smin3(-a, -b, k); }
-
-        float sdTri2(vec2 p, float r) {
-          const float k = 1.73205080757;
-          p.x = abs(p.x) - r;
-          p.y = p.y + r / k;
-          if (p.x + k * p.y > 0.0) p = vec2(p.x - k * p.y, -k * p.x - p.y) * 0.5;
-          p.x -= clamp(p.x, -2.0 * r, 0.0);
-          return -length(p) * (p.y < 0.0 ? -1.0 : 1.0);
+        float sdRoundBox(vec3 p, vec3 b, float r) {
+          vec3 q = abs(p) - b;
+          return length(max(q, 0.0)) + min(max(q.x, max(q.y, q.z)), 0.0) - r;
         }
-        float sdHex2(vec2 p, float r) {
-          const vec3 k = vec3(-0.866025404, 0.5, 0.577350269);
-          p = abs(p);
-          p -= 2.0 * min(dot(k.xy, p), 0.0) * k.xy;
-          p -= vec2(clamp(p.x, -k.z * r, k.z * r), r);
-          return length(p) * (p.y < 0.0 ? -1.0 : 1.0);
-        }
-        float sdBox3(vec3 p, vec3 b) {
-          vec3 d = abs(p) - b;
-          return length(max(d, 0.0)) + min(max(d.x, max(d.y, d.z)), 0.0);
-        }
-        float sdCylY3(vec3 p, float r, float h) {
-          vec2 d = vec2(length(p.xz) - r, abs(p.y) - h);
-          return min(max(d.x, d.y), 0.0) + length(max(d, 0.0));
-        }
-        float sdSphere3(vec3 p, float r) { return length(p) - r; }
-        float sdTorus3(vec3 p, float R, float r) {
-          return length(vec2(length(p.xz) - R, p.y)) - r;
-        }
-        float sdCapsule3(vec3 p, vec3 a, vec3 b, float r) {
+        float sdSphere(vec3 p, float r) { return length(p) - r; }
+        float sdCapsule(vec3 p, vec3 a, vec3 b, float r) {
           vec3 pa = p - a, ba = b - a;
-          float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
+          float h = clamp(dot(pa, ba) / max(dot(ba, ba), 1e-6), 0.0, 1.0);
           return length(pa - ba * h) - r;
         }
-        float extrude3(float d2, float y, float h) {
-          float dy = abs(y) - h;
-          return min(max(d2, dy), 0.0) + length(max(vec2(d2, dy), 0.0));
+        vec2 bez2(vec2 a, vec2 b, vec2 c, float t) {
+          vec2 ab = mix(a, b, t);
+          vec2 bc = mix(b, c, t);
+          return mix(ab, bc, t);
         }
-        vec3 rotY3(vec3 p, float a) {
-          float c = cos(a), s = sin(a);
-          return vec3(c * p.x + s * p.z, p.y, -s * p.x + c * p.z);
+        float sdBezierTube(vec3 p, vec2 a, vec2 b, vec2 c, float r) {
+          float d = 1e9;
+          vec2 prev = a;
+          for (int i = 1; i <= 8; i++) {
+            vec2 cur = bez2(a, b, c, float(i) / 8.0);
+            d = min(d, sdCapsule(p, vec3(prev, 0.0), vec3(cur, 0.0), r));
+            prev = cur;
+          }
+          return d;
         }
-        vec3 rotX3(vec3 p, float a) {
-          float c = cos(a), s = sin(a);
-          return vec3(p.x, c * p.y - s * p.z, s * p.y + c * p.z);
+        float sdSpindle(vec3 p) {
+          float ay = abs(p.y);
+          float R = 0.12 * max(0.0, 1.0 - pow(ay / 0.90, 2.0));
+          float radial = length(p.xz) - R;
+          float cap = ay - 0.90;
+          return max(radial, cap * 0.35);
         }
-        vec3 rotZ3(vec3 p, float a) {
-          float c = cos(a), s = sin(a);
-          return vec3(c * p.x - s * p.y, s * p.x + c * p.y, p.z);
+        float sceneMaxwell(vec3 p) {
+          float d = sdSpindle(p);
+          vec2 anchor = vec2(-0.90, 0.0);
+          d = smin3(d, sdSphere(p - vec3(anchor, 0.0), 0.08), 0.04);
+          d = smin3(d, sdCapsule(p, vec3(-0.90, 0.0, 0.0), vec3(-0.12, 0.0, 0.0), 0.012), 0.03);
+          d = smin3(d, sdSphere(p - vec3(-0.65, 0.0, 0.0), 0.018), 0.02);
+          d = smin3(d, sdBezierTube(p, anchor, vec2(-0.50, 0.60), vec2(-0.10, 0.15), 0.015), 0.045);
+          d = smin3(d, sdBezierTube(p, anchor, vec2(-0.50,-0.60), vec2(-0.10,-0.15), 0.015), 0.045);
+          d = smin3(d, sdSphere(p - vec3(-0.65, 0.28, 0.0), 0.040), 0.03);
+          d = smin3(d, sdSphere(p - vec3(-0.45, 0.35, 0.0), 0.016), 0.02);
+          d = smin3(d, sdSphere(p - vec3(-0.65,-0.28, 0.0), 0.040), 0.03);
+          d = smin3(d, sdSphere(p - vec3(-0.45,-0.35, 0.0), 0.016), 0.02);
+          vec2 origin = vec2(0.12, 0.0);
+          vec2 ctrl = vec2(0.40, 0.0);
+          vec2 ends[7];
+          float rads[7];
+          ends[0] = vec2(0.65, 0.78); rads[0] = 0.060;
+          ends[1] = vec2(0.75, 0.52); rads[1] = 0.040;
+          ends[2] = vec2(0.90, 0.32); rads[2] = 0.080;
+          ends[3] = vec2(0.55, 0.15); rads[3] = 0.025;
+          ends[4] = vec2(0.52,-0.10); rads[4] = 0.020;
+          ends[5] = vec2(0.88,-0.35); rads[5] = 0.075;
+          ends[6] = vec2(0.70,-0.72); rads[6] = 0.065;
+          for (int i = 0; i < 7; i++) {
+            d = smin3(d, sdBezierTube(p, origin, ctrl, ends[i], 0.012), 0.035);
+            d = smin3(d, sdSphere(p - vec3(ends[i], 0.0), rads[i]), 0.03);
+          }
+          return d;
         }
-
-        float sceneSDF(vec3 p) {
-          int m = uConcept;
-          if (m == 1) {
-            float d = extrude3(sdTri2(p.xz, 0.64) - 0.08, p.y, 0.095) - 0.045;
-            float hole = extrude3(sdTri2(vec2(p.x, -p.z), 0.25) - 0.04, p.y, 0.35);
-            d = smax3(d, -hole, 0.035);
-            for (int k = 0; k < 3; k++) {
-              vec3 q = rotY3(p, float(k) * 2.0943951);
-              float g1 = sdCapsule3(q, vec3(0.06,  0.115, -0.11), vec3(0.52,  0.115, -0.11), 0.045);
-              float g2 = sdCapsule3(q, vec3(0.06, -0.115, -0.11), vec3(0.52, -0.115, -0.11), 0.045);
-              d = smax3(d, -min(g1, g2), 0.025);
-            }
-            return d;
-          }
-          if (m == 2) {
-            float d = sdCylY3(p, 0.66, 0.09) - 0.045;
-            d = smax3(d, -sdCylY3(p, 0.16, 0.35), 0.025);
-            for (int k = 0; k < 3; k++) {
-              vec3 q = rotY3(p, float(k) * 2.0943951);
-              float scoop = sdCylY3(q - vec3(0.40, 0.0, 0.32), 0.32, 0.35);
-              d = smax3(d, -scoop, 0.03);
-            }
-            return d;
-          }
-          if (m == 3) {
-            float d = extrude3(sdTri2(p.xz, 0.62), p.y, 0.10) - 0.07;
-            d = max(d, sdSphere3(vec3(p.x, p.y * 1.15 - 0.02, p.z), 0.78));
-            for (int k = 0; k < 3; k++) {
-              vec3 q = rotY3(p, float(k) * 2.0943951);
-              float slot = sdBox3(q - vec3(0.22, 0.0, 0.0), vec3(0.55, 0.40, 0.055));
-              d = max(d, -slot);
-            }
-            return max(d, -sdCylY3(p, 0.14, 0.45));
-          }
-          if (m == 4) {
-            float d = 1e9;
-            for (int k = 0; k < 3; k++) {
-              float a = float(k) * 2.0943951;
-              vec3 c = vec3(cos(a) * 0.24, 0.0, sin(a) * 0.24);
-              d = smin3(d, sdCylY3(p - c, 0.36, 0.095) - 0.045, 0.06);
-            }
-            for (int k = 0; k < 3; k++) {
-              float a = float(k) * 2.0943951;
-              vec3 c = vec3(cos(a) * 0.27, 0.0, sin(a) * 0.27);
-              d = smax3(d, -sdCylY3(p - c, 0.14, 0.35), 0.025);
-            }
-            return smax3(d, -sdCylY3(p, 0.12, 0.35), 0.025);
-          }
-          if (m == 5) {
-            float a = sdTorus3(p, 0.50, 0.105);
-            float b = sdTorus3(rotX3(p - vec3(0.50, 0.0, 0.0), PI * 0.5), 0.50, 0.105);
-            float c = sdTorus3(rotZ3(p - vec3(0.0, 0.0, 0.50), PI * 0.5), 0.50, 0.105);
-            return min(a, min(b, c));
-          }
-          if (m == 6) {
-            float d = extrude3(sdHex2(p.xz, 0.62), p.y, 0.07) - 0.045;
-            d = max(d, sdSphere3(vec3(p.x, (p.y - 0.02) * 1.35, p.z), 0.74));
-            float hole = extrude3(min(sdTri2(p.xz, 0.30), sdTri2(vec2(p.x, -p.z), 0.30)), p.y, 0.40);
-            d = max(d, -(hole - 0.02));
-            for (int k = 0; k < 6; k++) {
-              float a = float(k) * 1.04719755;
-              d = max(d, -sdSphere3(p - vec3(cos(a) * 0.70, 0.0, sin(a) * 0.70), 0.15));
-            }
-            return d;
-          }
-          if (m == 7) {
-            float d = sdBox3(p, vec3(0.46)) - 0.08;
-            d = smax3(d, sdSphere3(p, 0.68), 0.04);
-            float c1 = sdCylY3(p, 0.25, 0.80);
-            float c2 = sdCylY3(rotX3(p, PI * 0.5), 0.25, 0.80);
-            float c3 = sdCylY3(rotZ3(p, PI * 0.5), 0.25, 0.80);
-            d = smax3(d, -min(c1, min(c2, c3)), 0.045);
-            return min(d, sdSphere3(p, 0.17));
-          }
-          if (m == 8) {
-            float d = extrude3(sdTri2(p.xz, 0.66) - 0.06, p.y, 0.11) - 0.05;
-            d = smax3(d, -extrude3(sdTri2(p.xz, 0.28), p.y, 0.40), 0.03);
-            for (int k = 0; k < 3; k++) {
-              vec3 q = rotY3(p, float(k) * 2.0943951);
-              float notch = sdBox3(q - vec3(0.0, 0.0, -0.55), vec3(0.075, 0.35, 0.35));
-              d = smax3(d, -notch, 0.025);
-            }
-            return d;
-          }
-          if (m == 9) {
-            float d = min(sdTorus3(p, 0.60, 0.115), sdTorus3(p, 0.25, 0.085));
-            for (int k = 0; k < 3; k++) {
-              vec3 q = rotY3(p, float(k) * 2.0943951);
-              float spoke = sdBox3(q - vec3(0.42, 0.0, 0.0), vec3(0.18, 0.055, 0.065)) - 0.015;
-              d = smin3(d, spoke, 0.035);
-              vec3 g = rotY3(p, float(k) * 2.0943951 + 1.04719755);
-              float gate = sdBox3(g - vec3(0.60, 0.09, 0.0), vec3(0.20, 0.08, 0.055));
-              d = smax3(d, -gate, 0.015);
-            }
-            return d;
-          }
-          if (m == 10) {
-            float t0 = extrude3(sdHex2(p.xz, 0.62) - 0.04, p.y + 0.14, 0.055) - 0.03;
-            float t1 = extrude3(sdHex2(p.xz, 0.46) - 0.04, p.y,        0.055) - 0.03;
-            float t2 = extrude3(sdHex2(p.xz, 0.30) - 0.04, p.y - 0.14, 0.055) - 0.03;
-            float d = smin3(t0, smin3(t1, t2, 0.035), 0.035);
-            return smax3(d, -sdCylY3(p, 0.15, 0.45), 0.03);
-          }
-          if (m == 11) {
-            float a = sdTorus3(p - vec3(0.02, 0.0, 0.0), 0.46, 0.105);
-            float b = sdTorus3(rotX3(p - vec3(0.46, 0.0, 0.0), PI * 0.5), 0.46, 0.105);
-            return min(a, b);
-          }
-          float d = extrude3(sdHex2(p.xz, 0.58), p.y, 0.08) - 0.04;
-          d = max(d, -sdCylY3(p, 0.22, 0.40));
-          for (int k = 0; k < 6; k++) {
-            vec3 q = rotY3(p, float(k) * 1.04719755);
-            float slot = sdBox3(q, vec3(0.70, 0.28, 0.045));
-            slot = max(slot, -(length(q.xz) - 0.30));
-            d = max(d, -slot);
-          }
-          return min(d, sdSphere3(p, 0.12));
+        float sceneTurbo(vec3 p) {
+          float d = sdSphere(p, 0.15);
+          float ring = length(vec2(length(p.xy) - 0.85, p.z * 1.55)) - 0.055;
+          float groove = length(vec2(length(p.xy) - 0.85, p.z * 3.2)) - 0.012;
+          d = smin3(d, max(ring, -groove), 0.02);
+          float r = length(p.xy);
+          float ang = atan(p.y, p.x) + 2.0 * (r - 0.15);
+          float sector = PI / 4.0;
+          ang = mod(ang + sector * 0.5, sector) - sector * 0.5;
+          vec2 blade = vec2(cos(ang), sin(ang)) * r;
+          float span = clamp((r - 0.14) / 0.71, 0.0, 1.0);
+          float halfT = mix(0.075, 0.018, span);
+          float halfZ = mix(0.10, 0.045, span);
+          vec2 q = vec2(blade.y, p.z);
+          float bladeD = length(max(abs(q) - vec2(halfT, halfZ), 0.0)) - 0.012;
+          bladeD = max(bladeD, 0.13 - r);
+          bladeD = max(bladeD, r - 0.86);
+          return smin3(d, bladeD, 0.045);
         }
+        float sceneNative(vec3 p) {
+          float pitch = -0.6154797;
+          float yaw = 0.78539816;
+          float cy = cos(yaw), sy = sin(yaw);
+          p = vec3(cy * p.x + sy * p.z, p.y, -sy * p.x + cy * p.z);
+          float cx = cos(pitch), sx = sin(pitch);
+          p = vec3(p.x, cx * p.y - sx * p.z, sx * p.y + cx * p.z);
+          float d = sdRoundBox(p, vec3(0.15), 0.05);
+          for (int ix = 0; ix < 2; ix++)
+          for (int iy = 0; iy < 2; iy++)
+          for (int iz = 0; iz < 2; iz++) {
+            vec3 c = vec3(ix == 0 ? -0.65 : 0.65, iy == 0 ? -0.65 : 0.65, iz == 0 ? -0.65 : 0.65);
+            d = min(d, sdRoundBox(p - c, vec3(0.22), 0.08));
+          }
+          return d;
+        }
+        float sceneOf(int id, vec3 p) {
+          if (id == 1) return sceneMaxwell(p);
+          if (id == 2) return sceneTurbo(p);
+          return sceneNative(p);
+        }
+        float sceneSDF(vec3 p) { return sceneOf(uConcept, p); }
 
         vec3 sceneNormal(vec3 p) {
-          const float e = 0.0016;
-          float dx = sceneSDF(p + vec3(e, 0.0, 0.0)) - sceneSDF(p - vec3(e, 0.0, 0.0));
-          float dy = sceneSDF(p + vec3(0.0, e, 0.0)) - sceneSDF(p - vec3(0.0, e, 0.0));
-          float dz = sceneSDF(p + vec3(0.0, 0.0, e)) - sceneSDF(p - vec3(0.0, 0.0, e));
-          return normalize(vec3(dx, dy, dz));
+          vec2 e = vec2(0.0014, 0.0);
+          return normalize(vec3(
+            sceneSDF(p + e.xyy) - sceneSDF(p - e.xyy),
+            sceneSDF(p + e.yxy) - sceneSDF(p - e.yxy),
+            sceneSDF(p + e.yyx) - sceneSDF(p - e.yyx)));
         }
 
-        float sceneAO(vec3 p, vec3 n) {
-          float occ = 0.0, sc = 1.0;
-          for (int i = 1; i <= 4; i++) {
-            float h = 0.035 * float(i);
-            occ += (h - sceneSDF(p + n * h)) * sc;
-            sc *= 0.55;
-          }
-          return clamp(1.0 - 1.35 * occ, 0.0, 1.0);
+        vec3 softbox(vec3 rd, vec3 axis, vec2 size) {
+          vec3 w = normalize(axis);
+          vec3 u = normalize(cross(w, abs(w.y) < 0.9 ? vec3(0.0, 1.0, 0.0) : vec3(1.0, 0.0, 0.0)));
+          vec3 v = cross(w, u);
+          vec2 uv = vec2(dot(rd, u), dot(rd, v)) / max(dot(rd, w), 0.04);
+          vec2 q = abs(uv) - size;
+          float d = length(max(q, 0.0)) + min(max(q.x, q.y), 0.0);
+          return vec3(1.0, 0.98, 0.94) * exp(-max(d, 0.0) * 18.0) * smoothstep(0.0, 0.25, dot(rd, w));
         }
-
-        float sceneShadow(vec3 p, vec3 ld) {
-          float t = 0.02, res = 1.0;
-          for (int i = 0; i < 14; i++) {
-            float h = sceneSDF(p + ld * t);
-            if (h < 0.0015) return 0.28;
-            res = min(res, 14.0 * h / t);
-            t += clamp(h, 0.015, 0.12);
-            if (t > 2.2) break;
-          }
-          return clamp(res, 0.28, 1.0);
-        }
-
-        float hash3f(vec3 p) {
-          p = fract(p * vec3(0.1031, 0.1030, 0.0973));
-          float d = p.x * (p.y + 33.33) + p.y * (p.z + 33.33) + p.z * (p.x + 33.33);
-          p += d;
-          return fract((p.x + p.y) * p.z);
-        }
-        float noise3f(vec3 x) {
-          vec3 i = floor(x), f = fract(x);
-          vec3 u = f * f * (3.0 - 2.0 * f);
-          float n000 = hash3f(i), n100 = hash3f(i + vec3(1,0,0));
-          float n010 = hash3f(i + vec3(0,1,0)), n110 = hash3f(i + vec3(1,1,0));
-          float n001 = hash3f(i + vec3(0,0,1)), n101 = hash3f(i + vec3(1,0,1));
-          float n011 = hash3f(i + vec3(0,1,1)), n111 = hash3f(i + vec3(1,1,1));
-          return mix(mix(mix(n000, n100, u.x), mix(n010, n110, u.x), u.y),
-                     mix(mix(n001, n101, u.x), mix(n011, n111, u.x), u.y), u.z);
-        }
-
         vec3 envColor(vec3 rd) {
-          float up = clamp(rd.y * 0.5 + 0.5, 0.0, 1.0);
-          vec3 floorC = vec3(0.015, 0.016, 0.02);
-          vec3 zenith, horiz;
-          if (uPalette == 0)      { zenith = vec3(0.55, 0.78, 0.92); horiz = vec3(0.16, 0.28, 0.38); }
-          else if (uPalette == 1) { zenith = vec3(0.62, 0.58, 0.82); horiz = vec3(0.28, 0.20, 0.16); }
-          else                     { zenith = vec3(0.45, 0.78, 0.70); horiz = vec3(0.10, 0.22, 0.24); }
-          vec3 sky = mix(horiz, zenith, pow(up, 0.65));
-          sky = mix(floorC, sky, smoothstep(-0.25, 0.15, rd.y));
-          float win  = exp(-pow(length(rd - vec3( 0.45, 0.55, 0.65)) * 2.4, 2.0));
-          float win2 = exp(-pow(length(rd - vec3(-0.55, 0.15, 0.45)) * 3.2, 2.0));
-          sky += vec3(1.0, 0.98, 0.94) * win * 1.15 + vec3(0.65, 0.78, 0.95) * win2 * 0.55;
-          return sky;
+          vec3 c = vec3(0.004, 0.006, 0.010);
+          c += softbox(rd, normalize(vec3(0.15, 0.85, 0.50)), vec2(0.55, 0.28)) * 1.35;
+          c += softbox(rd, normalize(vec3(-0.85, 0.25, 0.35)), vec2(0.22, 0.55)) * vec3(0.55, 0.85, 1.05);
+          c += softbox(rd, normalize(vec3(0.75,-0.15, 0.45)), vec2(0.35, 0.16)) * vec3(0.85, 0.55, 0.95) * 0.45;
+          return c;
         }
-
-        vec3 shade(vec3 p, vec3 n, vec3 rd) {
-          float g1 = noise3f(p * 52.0) - 0.5;
-          float g2 = noise3f(p * 118.0) - 0.5;
-          float micro = g1 * 0.65 + g2 * 0.35;
-          vec3 nMicro = normalize(n + vec3(g1, g2, -g1) * 0.014 * uMetalAmp);
-
+        vec3 film(float ndv, float t) {
+          float ph = (1.0 - ndv) * 9.0 + t * 0.7;
+          return vec3(0.45 + 0.55 * sin(ph), 0.55 + 0.45 * sin(ph + 2.1), 0.62 + 0.38 * sin(ph + 4.2));
+        }
+        vec3 shadeSurface(vec3 p, vec3 n, vec3 rd, float metal) {
           vec3 v = -rd;
-          vec3 key = normalize(vec3(0.45, 0.85, 0.28));
-          vec3 fill = normalize(vec3(-0.6, 0.25, 0.35));
-          float sh = sceneShadow(p + n * 0.012, key);
-          float ao = sceneAO(p, n);
-          float ndv = clamp(dot(nMicro, v), 0.0, 1.0);
+          float ndv = clamp(dot(n, v), 0.0, 1.0);
           float fres = pow(1.0 - ndv, 4.0);
-          vec3 refl = normalize(rd - nMicro * (2.0 * dot(rd, nMicro)));
+          vec3 refl = reflect(rd, n);
           vec3 env = envColor(refl);
-
-          vec2 coreUv = clamp(refl.xz * 0.42 + p.xz * 0.25 + 0.5, 0.02, 0.98);
-          vec3 coreSheen = texture(uCoreTex, coreUv).rgb;
-          float coatWave = sin(refl.x * 4.5 + p.z * 3.0 + uTime * 0.6) * cos(refl.z * 4.5 - p.x * 3.0);
-          env = mix(env, env * 0.45 + coreSheen * 1.35, clamp(0.55 * uFlowAmp, 0.0, 1.0) * (0.35 + 0.65 * fres));
-          env += coreSheen * (0.10 + 0.08 * coatWave) * fres * uFlowAmp;
-
-          float rough = clamp(0.20 + micro * 0.06, 0.12, 0.32);
-          vec3 h1 = normalize(key + v);
-          vec3 h2 = normalize(fill + v);
-          float spec1 = pow(clamp(dot(nMicro, h1), 0.0, 1.0), mix(110.0, 26.0, rough)) * sh;
-          float spec2 = pow(clamp(dot(nMicro, h2), 0.0, 1.0), 42.0) * 0.38;
-          float ndl = clamp(dot(nMicro, key), 0.0, 1.0);
-          float F = mix(0.87, 1.0, fres);
-          float phase = ndv * 7.5 + float(uPalette) * 1.7 + p.x * 2.0 + uTime * 0.35;
-          vec3 irid = vec3(0.55 + 0.45 * sin(phase), 0.55 + 0.45 * sin(phase + 2.1), 0.55 + 0.45 * sin(phase + 4.2));
-          vec3 col = env * (0.92 + micro * 0.06);
-          col += irid * fres * 0.22 * uIridAmp;
-          col *= F;
-          col += vec3(1.08, 1.04, 0.98) * spec1 * 0.90 + vec3(0.75, 0.82, 0.95) * spec2;
-          col += vec3(0.18, 0.22, 0.28) * clamp(-nMicro.y * 0.5 + 0.5, 0.0, 1.0) * 0.14 * ao;
-          col = col * (0.82 + 0.18 * sh) + vec3(0.03, 0.035, 0.04) * (0.25 + 0.75 * ndl) * (1.0 - fres);
-          col *= mix(0.45, 1.0, ao);
-          col += envColor(nMicro) * pow(1.0 - ndv, 3.0) * ao * 0.20;
-          return col / (1.0 + col * 0.55);
+          vec3 sheen = texture(uCoreTex, clamp(refl.xy * 0.35 + 0.5, 0.02, 0.98)).rgb;
+          env = mix(env, env * 0.35 + sheen, 0.28 * metal);
+          vec3 F0 = mix(vec3(0.04), vec3(0.92), metal);
+          vec3 F = mix(F0, vec3(1.0), fres);
+          vec3 col = env * F;
+          col += film(ndv, uTime + p.x) * fres * 0.55 * uIridAmp * mix(0.35, 1.0, metal);
+          float spec = pow(clamp(dot(n, normalize(normalize(vec3(0.35, 0.85, 0.25)) + v)), 0.0, 1.0), mix(48.0, 140.0, metal));
+          col += vec3(1.05, 1.02, 0.98) * spec * (0.35 + 0.65 * metal);
+          col *= mix(0.15, 1.0, metal);
+          return col;
         }
-
-        void main() {
-          vec2 q = (vUv - 0.5) * 2.0;
-          float yaw = 0.62 + uPointer.x * 0.9 + uTime * 0.12;
-          float pitch = clamp(0.42 - uPointer.y * 0.45, 0.12, 1.05);
-          float dist = 2.85;
+        vec3 beer(vec3 c, float dist) {
+          return c * exp(-vec3(0.55, 0.28, 0.18) * dist * 0.85);
+        }
+        vec3 refractRay(vec3 rd, vec3 n, float eta) {
+          float k = 1.0 - eta * eta * (1.0 - dot(n, rd) * dot(n, rd));
+          if (k < 0.0) return reflect(rd, n);
+          return eta * rd - (eta * dot(n, rd) + sqrt(k)) * n;
+        }
+        float march(vec3 ro, vec3 rd, float sgn, int steps) {
+          float t = 0.004;
+          for (int i = 0; i < 48; i++) {
+            if (i >= steps) break;
+            float h = sgn * sceneSDF(ro + rd * t);
+            if (h < 0.0015) return t;
+            t += max(h, 0.004);
+            if (t > 3.2) break;
+          }
+          return -1.0;
+        }
+        vec3 shadeCrystal(vec3 ro, vec3 rd, vec3 n, float etaScale) {
+          float eta = (1.0 / mix(1.45, 1.72, clamp(uFlowAmp / 2.4, 0.0, 1.0))) * etaScale;
+          vec3 acc = vec3(0.0);
+          vec3 w = vec3(0.30, 0.40, 0.30);
+          float scales[3];
+          scales[0] = 0.965; scales[1] = 1.0; scales[2] = 1.045;
+          for (int c = 0; c < 3; c++) {
+            vec3 r1 = refractRay(rd, n, eta * scales[c]);
+            float t1 = march(ro + n * -0.004, r1, -1.0, 28);
+            vec3 col = vec3(0.0);
+            if (t1 > 0.0) {
+              vec3 p2 = ro + r1 * t1;
+              vec3 n2 = -sceneNormal(p2);
+              float fresIn = pow(1.0 - clamp(dot(-r1, n2), 0.0, 1.0), 3.0);
+              vec3 r2 = refractRay(r1, n2, 1.0 / (eta * scales[c]));
+              vec3 env = envColor(r2);
+              env += film(clamp(dot(-r1, n2), 0.0, 1.0), uTime) * 0.22 * uIridAmp;
+              col = beer(env, t1) * (0.55 + 0.45 * fresIn);
+              col += envColor(reflect(r1, n2)) * fresIn * 0.65;
+            }
+            acc[c] = dot(col, c == 0 ? vec3(1.0, 0.15, 0.05) : c == 1 ? vec3(0.08, 1.0, 0.12) : vec3(0.05, 0.18, 1.0));
+          }
+          return acc;
+        }
+        vec3 renderObject(int id, vec2 q) {
+          int saved = uConcept;
+          // sceneOf uses id directly
+          float yaw = (id == 3 ? 0.0 : 0.15) + uPointer.x * 0.55 + uTime * 0.05;
+          float pitch = (id == 3 ? 0.0 : 0.08) + uPointer.y * 0.28;
+          float dist = id == 1 ? 2.55 : 2.35;
           vec3 ro = vec3(sin(yaw) * cos(pitch), sin(pitch), cos(yaw) * cos(pitch)) * dist;
           vec3 ww = normalize(-ro);
           vec3 uu = normalize(cross(vec3(0.0, 1.0, 0.0), ww));
           vec3 vv = cross(ww, uu);
-          vec3 rd = normalize(ww * 2.15 + uu * q.x + vv * q.y);
-
-          float b = dot(rd, -ro);
-          float disc = b * b - (dot(ro, ro) - 1.25 * 1.25);
-          if (disc < 0.0 || b < 0.0) { fragColor = vec4(0.0, 0.0, 0.0, 1.0); return; }
-          float t = max(0.0, b - sqrt(disc));
-          for (int i = 0; i < 64; i++) {
+          vec3 rd = normalize(ww * 2.05 + uu * q.x + vv * q.y);
+          float t = 0.0;
+          vec3 col = vec3(0.0);
+          for (int i = 0; i < 72; i++) {
             vec3 pos = ro + rd * t;
-            float h = sceneSDF(pos);
+            float h = sceneOf(id, pos);
             if (h < 0.0012) {
-              fragColor = vec4(shade(pos, sceneNormal(pos), rd), 1.0);
-              return;
+              vec3 n = normalize(vec3(
+                sceneOf(id, pos + vec3(0.0014, 0.0, 0.0)) - sceneOf(id, pos - vec3(0.0014, 0.0, 0.0)),
+                sceneOf(id, pos + vec3(0.0, 0.0014, 0.0)) - sceneOf(id, pos - vec3(0.0, 0.0014, 0.0)),
+                sceneOf(id, pos + vec3(0.0, 0.0, 0.0014)) - sceneOf(id, pos - vec3(0.0, 0.0, 0.0014))));
+              float metal = clamp(uMetalAmp, 0.0, 1.0);
+              vec3 metalCol = shadeSurface(pos, n, rd, metal);
+              vec3 crystalCol = vec3(0.0);
+              if (metal < 0.92) {
+                float eta = (1.0 / mix(1.45, 1.72, clamp(uFlowAmp / 2.4, 0.0, 1.0)));
+                vec3 r1 = refractRay(rd, n, eta);
+                float tt = 0.006;
+                vec3 p2 = pos;
+                vec3 n2 = n;
+                bool hit = false;
+                for (int k = 0; k < 24; k++) {
+                  p2 = pos - n * 0.01 + r1 * tt;
+                  float hh = -sceneOf(id, p2);
+                  if (hh < 0.002) { hit = true; break; }
+                  tt += max(hh, 0.006);
+                  if (tt > 2.4) break;
+                }
+                if (hit) {
+                  n2 = -normalize(vec3(
+                    sceneOf(id, p2 + vec3(0.0014,0,0)) - sceneOf(id, p2 - vec3(0.0014,0,0)),
+                    sceneOf(id, p2 + vec3(0,0.0014,0)) - sceneOf(id, p2 - vec3(0,0.0014,0)),
+                    sceneOf(id, p2 + vec3(0,0,0.0014)) - sceneOf(id, p2 - vec3(0,0,0.0014))));
+                  float fresIn = pow(1.0 - clamp(dot(-r1, n2), 0.0, 1.0), 3.0);
+                  vec3 base = beer(envColor(refractRay(r1, n2, 1.0 / eta)), tt);
+                  vec3 split = vec3(0.0);
+                  for (int c = 0; c < 3; c++) {
+                    float sc = c == 0 ? 0.97 : c == 1 ? 1.0 : 1.04;
+                    vec3 rr = refractRay(r1, n2, sc / eta);
+                    split[c] = dot(beer(envColor(rr), tt), c == 0 ? vec3(1,0.2,0.05) : c == 1 ? vec3(0.1,1,0.15) : vec3(0.05,0.2,1));
+                  }
+                  crystalCol = mix(base, split, clamp(uFlowAmp * 0.45, 0.0, 1.0));
+                  crystalCol += envColor(reflect(r1, n2)) * fresIn;
+                  crystalCol += film(clamp(dot(-rd, n), 0.0, 1.0), uTime) * 0.18 * uIridAmp;
+                }
+              }
+              col = mix(crystalCol, metalCol, metal);
+              col += shadeSurface(pos, n, rd, 0.0) * (1.0 - metal) * 0.85;
+              break;
             }
-            t += h * 0.92;
+            t += h * 0.9;
             if (t > 6.0) break;
           }
-          fragColor = vec4(0.0, 0.0, 0.0, 1.0);
+          return col / (1.0 + col * 0.45);
+        }
+
+        void main() {
+          if (uConcept == 0) {
+            float x = vUv.x;
+            int id = x < 0.333 ? 1 : x < 0.666 ? 2 : 3;
+            float local = fract(x * 3.0);
+            vec2 q = vec2((local - 0.5) * 2.0, (vUv.y - 0.5) * 2.0);
+            q.x *= 0.92;
+            fragColor = vec4(renderObject(id, q), 1.0);
+            return;
+          }
+          vec2 q = (vUv - 0.5) * 2.0;
+          fragColor = vec4(renderObject(uConcept, q), 1.0);
         }
       `;
 
@@ -841,24 +797,33 @@
 <script>
   const opts = document.getElementById('concept-opts');
   const blurb = document.getElementById('blurb');
+  const projRow = document.getElementById('proj-row');
+  function selectConcept(id) {
+    state.concept = id;
+    if (id in PRESET_METAL) {
+      state.metalAmp = PRESET_METAL[id];
+      const mEl = document.getElementById('ctrl-metal');
+      mEl.value = state.metalAmp;
+      document.getElementById('val-metal').textContent = state.metalAmp.toFixed(2);
+    }
+    for (const x of projRow.children) x.classList.toggle('active', +x.dataset.proj === id);
+    renderOpts();
+  }
   function renderOpts() {
     opts.innerHTML = '';
-    for (const [id, name, desc] of CONCEPTS[state.palette]) {
+    for (const [id, name, desc] of CONCEPTS) {
       const b = document.createElement('button');
       b.innerHTML = name + '<small>' + desc + '</small>';
       if (id === state.concept) b.classList.add('active');
-      b.onclick = () => { state.concept = id; renderOpts(); };
+      b.onclick = () => selectConcept(id);
       opts.appendChild(b);
     }
-    const cur = CONCEPTS[state.palette].find(c => c[0] === state.concept);
+    const cur = CONCEPTS.find(c => c[0] === state.concept);
     blurb.textContent = cur ? cur[2] : '';
   }
-  document.getElementById('proj-row').onclick = e => {
+  projRow.onclick = e => {
     const b = e.target.closest('button'); if (!b) return;
-    state.palette = +b.dataset.proj;
-    state.concept = CONCEPTS[state.palette][0][0];
-    for (const x of e.currentTarget.children) x.classList.toggle('active', x === b);
-    renderOpts();
+    selectConcept(+b.dataset.proj);
   };
   function bind(id, key, out) {
     const el = document.getElementById(id);
@@ -872,10 +837,10 @@
     const c = document.getElementById('canvas-shader');
     const a = document.createElement('a');
     a.href = c.toDataURL('image/png');
-    a.download = 'logo_concept_' + state.concept + '.png';
+    a.download = 'logo_' + (state.concept || 'triptych') + '.png';
     a.click();
   };
-  renderOpts();
+  selectConcept(1);
 </script>
 </body>
 </html>

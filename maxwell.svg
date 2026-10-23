@@ -1,45 +1,50 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" fill="none">
-  <rect width="512" height="512" fill="#000000"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="60 48 392 416" width="512" height="512" fill="none">
   <defs>
     <linearGradient id="mx-metal" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#F8FAFC"/>
-      <stop offset="50%" stop-color="#94A3B8"/>
-      <stop offset="100%" stop-color="#F8FAFC"/>
+      <stop offset="0%" stop-color="#E2E8F0"/>
+      <stop offset="50%" stop-color="#64748B"/>
+      <stop offset="100%" stop-color="#E2E8F0"/>
+    </linearGradient>
+    <linearGradient id="mx-spindle-fill" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.18"/>
+      <stop offset="50%" stop-color="#94A3B8" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0.22"/>
     </linearGradient>
     <linearGradient id="mx-ice" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#E2E8F0"/>
-      <stop offset="100%" stop-color="#7DD3FC"/>
+      <stop offset="0%" stop-color="#94A3B8"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
     </linearGradient>
   </defs>
 
-  <!-- Left conjecture input loops -->
-  <path d="M 96 256 C 96 156, 188 148, 240 220" stroke="#94A3B8" stroke-width="6" stroke-linecap="round"/>
-  <path d="M 96 256 C 96 356, 188 364, 240 292" stroke="#94A3B8" stroke-width="6" stroke-linecap="round"/>
-  <line x1="96" y1="256" x2="232" y2="256" stroke="#E2E8F0" stroke-width="6" stroke-linecap="round"/>
+  <!-- Left conjecture input loops (trimmed cleanly to node edges) -->
+  <path d="M 96 238 C 98 158, 188 150, 238 220" stroke="#94A3B8" stroke-width="6.5" stroke-linecap="round"/>
+  <path d="M 96 274 C 98 354, 188 362, 238 292" stroke="#94A3B8" stroke-width="6.5" stroke-linecap="round"/>
+  <line x1="114" y1="256" x2="230" y2="256" stroke="#CBD5E1" stroke-width="6.5" stroke-linecap="round"/>
 
   <!-- Left nodes -->
-  <circle cx="96" cy="256" r="18" fill="#000000" stroke="#F8FAFC" stroke-width="6"/>
-  <circle cx="96" cy="256" r="6" fill="#7DD3FC"/>
-  <circle cx="140" cy="184" r="9" fill="#000000" stroke="#94A3B8" stroke-width="5"/>
-  <circle cx="140" cy="328" r="9" fill="#000000" stroke="#94A3B8" stroke-width="5"/>
+  <circle cx="96" cy="256" r="18" stroke="#E2E8F0" stroke-width="6.5"/>
+  <circle cx="96" cy="256" r="6.5" fill="#38BDF8"/>
+  <circle cx="140" cy="184" r="9" fill="#94A3B8"/>
+  <circle cx="140" cy="328" r="9" fill="#94A3B8"/>
 
   <!-- Right sorted / certified trajectories -->
-  <path d="M 272 236 C 316 236, 336 132, 396 124" stroke="url(#mx-ice)" stroke-width="6" stroke-linecap="round"/>
-  <path d="M 272 246 C 324 246, 344 190, 422 184" stroke="#F8FAFC" stroke-width="6" stroke-linecap="round"/>
-  <path d="M 272 256 L 380 256" stroke="#94A3B8" stroke-width="5" stroke-linecap="round" stroke-dasharray="10 10"/>
-  <path d="M 272 266 C 324 266, 344 322, 422 328" stroke="#F8FAFC" stroke-width="6" stroke-linecap="round"/>
-  <path d="M 272 276 C 316 276, 336 380, 396 388" stroke="url(#mx-ice)" stroke-width="6" stroke-linecap="round"/>
+  <path d="M 274 236 C 316 236, 336 136, 381 126" stroke="url(#mx-ice)" stroke-width="6.5" stroke-linecap="round"/>
+  <path d="M 278 246 C 324 246, 344 190, 404 185" stroke="#CBD5E1" stroke-width="6.5" stroke-linecap="round"/>
+  <path d="M 282 256 L 372 256" stroke="#64748B" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="10 10"/>
+  <path d="M 278 266 C 324 266, 344 322, 404 327" stroke="#CBD5E1" stroke-width="6.5" stroke-linecap="round"/>
+  <path d="M 274 276 C 316 276, 336 376, 381 386" stroke="url(#mx-ice)" stroke-width="6.5" stroke-linecap="round"/>
 
   <!-- Right certified nodes -->
-  <circle cx="396" cy="124" r="15" fill="#000000" stroke="#7DD3FC" stroke-width="6"/>
-  <circle cx="422" cy="184" r="20" fill="#F8FAFC"/>
-  <circle cx="384" cy="256" r="7" fill="#64748B"/>
-  <circle cx="422" cy="328" r="20" fill="#F8FAFC"/>
-  <circle cx="396" cy="388" r="15" fill="#000000" stroke="#7DD3FC" stroke-width="6"/>
+  <circle cx="396" cy="124" r="15" stroke="#38BDF8" stroke-width="6.5"/>
+  <circle cx="422" cy="184" r="19" fill="#E2E8F0"/>
+  <circle cx="384" cy="256" r="7.5" fill="#64748B"/>
+  <circle cx="422" cy="328" r="19" fill="#E2E8F0"/>
+  <circle cx="396" cy="388" r="15" stroke="#38BDF8" stroke-width="6.5"/>
 
   <!-- Central Maxwell Gate (biconvex spindle + aperture ring) -->
-  <path d="M 256 68 C 282 148, 282 364, 256 444 C 230 364, 230 148, 256 68 Z" fill="#000000" stroke="url(#mx-metal)" stroke-width="6" stroke-linejoin="round"/>
-  <line x1="256" y1="84" x2="256" y2="428" stroke="#38BDF8" stroke-width="2" stroke-opacity="0.65"/>
-  <circle cx="256" cy="256" r="26" fill="#000000" stroke="#F8FAFC" stroke-width="6"/>
-  <circle cx="256" cy="256" r="9" fill="#7DD3FC"/>
+  <path d="M 256 68 C 284 148, 284 364, 256 444 C 228 364, 228 148, 256 68 Z" fill="url(#mx-spindle-fill)" stroke="url(#mx-metal)" stroke-width="6.5" stroke-linejoin="round"/>
+  <line x1="256" y1="84" x2="256" y2="230" stroke="#38BDF8" stroke-width="2.5" stroke-opacity="0.75"/>
+  <line x1="256" y1="282" x2="256" y2="428" stroke="#38BDF8" stroke-width="2.5" stroke-opacity="0.75"/>
+  <circle cx="256" cy="256" r="26" stroke="#E2E8F0" stroke-width="6.5"/>
+  <circle cx="256" cy="256" r="9.5" fill="#38BDF8"/>
 </svg>
